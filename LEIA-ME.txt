@@ -1,0 +1,29 @@
+CONFIRMAÇÃO DE PRESENÇA + ADMIN, 15 anos da Letícia Maria
+=========================================================
+
+ARQUIVOS
+  index.html  convite + formulário de confirmação (link para os convidados)
+  admin.html  painel com senha: total de pessoas, quem vai, quem não vai, acompanhantes
+  config.js   configuração usada pelas duas páginas
+  Code.gs     script da planilha do Google (recebe as respostas e alimenta o admin)
+
+1) PLANILHA (uns 5 minutos)
+   a. Crie uma planilha nova no Google Planilhas.
+   b. Extensões > Apps Script. Apague o que houver e cole o Code.gs.
+   c. Na 1ª linha do Code.gs, troque  'troque-esta-senha'  pela senha do admin. Salve.
+   d. Implantar > Nova implantação > "App da Web".
+        Executar como: Eu  |  Quem pode acessar: Qualquer pessoa
+      Implante e autorize com sua conta Google.
+   e. Copie a URL que termina em /exec e cole em config.js, em SCRIPT_URL.
+   (Se mudar o Code.gs depois: Implantar > Gerenciar implantações > editar > Nova versão.)
+
+2) PUBLICAR (GitHub Pages)
+   Novo repositório (ex.: leticia15) com index.html, admin.html e config.js.
+   Settings > Pages > Branch: main / root.
+     Convidados:  https://SEU-USUARIO.github.io/leticia15/
+     Admin:       https://SEU-USUARIO.github.io/leticia15/admin.html
+
+3) Mande o link dos convidados para eu colocar no botão "Confirmar presença" do PDF.
+
+Obs.: a página publicada no Claude não consegue gravar na planilha nem mostrar o admin.
+Lá, a confirmação é enviada pelo WhatsApp (defina o número em config.js, em WHATSAPP).
