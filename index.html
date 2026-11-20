@@ -150,6 +150,63 @@ input::placeholder{color:rgba(230,236,248,.4)}
 .done .big .s{font-family:Swash;font-size:54px}
 .done p{font-family:LoraI,serif;font-size:17px;line-height:1.5;margin:10px 4px}
 
+/* ===== ANIMAÇÕES EXTRAS ===== */
+/* estrelas cadentes */
+.cadente{position:fixed;z-index:0;top:0;left:0;width:140px;height:1.6px;pointer-events:none;border-radius:2px;
+ background:linear-gradient(90deg,rgba(255,255,255,0),#fff);filter:drop-shadow(0 0 6px #cfe0ff);opacity:0;animation:cai 1.4s ease-out forwards}
+@keyframes cai{0%{opacity:0;transform:translate(var(--x),var(--y)) rotate(-35deg) scaleX(.2)}15%{opacity:1}100%{opacity:0;transform:translate(calc(var(--x) - 340px),calc(var(--y) + 240px)) rotate(-35deg) scaleX(1)}}
+/* faíscas que explodem */
+.faisca{position:fixed;z-index:30;pointer-events:none;width:var(--t);height:var(--t);margin:calc(var(--t)/-2) 0 0 calc(var(--t)/-2);
+ background:#fff;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);filter:drop-shadow(0 0 4px #cfe0ff);
+ animation:explode var(--d) cubic-bezier(.15,.7,.3,1) forwards}
+@keyframes explode{0%{transform:translate(0,0) scale(.3) rotate(0);opacity:1}80%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1) rotate(var(--r));opacity:0}}
+/* envelope: inclina com o toque, cartão cresce e vira o convite */
+.env{transition:transform .5s ease}
+.env:hover{transform:rotate(-2deg) scale(1.02)}
+.env.zoom{animation:none;transform:scale(1);transition:transform 1s cubic-bezier(.6,0,.3,1),opacity .9s ease .2s}
+.env.zoom .card{transform:translateY(-58%) scale(3.4);transition:transform 1s cubic-bezier(.6,0,.3,1)}
+.env.zoom .back,.env.zoom .front,.env.zoom .flap{opacity:0;transition:opacity .5s}
+.capa-txt{transition:opacity .5s,transform .5s}
+#capa.abrindo .capa-txt{opacity:0;transform:translateY(-10px)}
+#capa.abrindo .btn-abrir,#capa.abrindo .capa-dica{opacity:0;transform:translateY(10px);transition:.4s}
+/* título com brilho passando */
+.meus.gold,.capa-nome.gold{background-size:100% 220%;animation:brilho 4s ease-in-out infinite}
+@keyframes brilho{0%,100%{background-position:0 0}50%{background-position:0 100%}}
+/* destaque da boneca */
+.hero{position:relative;width:min(330px,82vw);aspect-ratio:3/4;margin:4px auto -18px;display:flex;align-items:flex-end;justify-content:center}
+.hero .raios{position:absolute;inset:-12%;border-radius:50%;
+ background:repeating-conic-gradient(from 0deg,rgba(207,222,255,.16) 0 6deg,transparent 6deg 18deg);
+ -webkit-mask:radial-gradient(circle,#000 18%,transparent 66%);mask:radial-gradient(circle,#000 18%,transparent 66%);animation:gira 40s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
+.hero .halo{position:absolute;left:8%;right:8%;top:6%;bottom:10%;border-radius:50%;
+ background:radial-gradient(circle,rgba(207,222,255,.55) 0%,rgba(94,140,255,.28) 38%,transparent 70%);animation:respira 4s ease-in-out infinite}
+@keyframes respira{0%,100%{transform:scale(.94);opacity:.75}50%{transform:scale(1.06);opacity:1}}
+.hero .arco{position:absolute;left:12%;right:12%;top:2%;bottom:4%;border-radius:999px 999px 24px 24px;border:1.4px solid rgba(255,255,255,.55);
+ box-shadow:0 0 22px rgba(207,222,255,.3),inset 0 0 22px rgba(207,222,255,.15)}
+.hero .arco::before{content:"";position:absolute;inset:7px;border-radius:inherit;border:1px dashed rgba(255,255,255,.3)}
+.hero img{position:relative;z-index:2;max-width:100%;max-height:100%;object-fit:contain;
+ filter:drop-shadow(0 0 18px rgba(207,222,255,.55)) drop-shadow(0 14px 18px rgba(0,0,0,.45));animation:boia 5s ease-in-out infinite}
+@keyframes boia{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero .orb{position:absolute;inset:0;z-index:3;pointer-events:none}
+.hero .orb i{position:absolute;width:9px;height:9px;background:#fff;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);
+ filter:drop-shadow(0 0 4px #fff);animation:pisca 2.4s ease-in-out infinite}
+@keyframes pisca{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:1;transform:scale(1) rotate(90deg)}}
+#convite.mostra .hero.rev{animation:surge 1.3s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes surge{0%{opacity:0;transform:scale(.7) translateY(30px);filter:blur(8px)}100%{opacity:1;transform:none;filter:none}}
+/* botões: brilho que atravessa */
+.op{position:relative;overflow:hidden}
+.op::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;transform:skewX(-20deg);
+ background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);animation:varre 5s ease-in-out infinite;animation-delay:inherit}
+@keyframes varre{0%,70%{left:-60%}100%{left:130%}}
+.op .ic{transition:transform .3s}
+.op:hover .ic{transform:scale(1.12) rotate(-6deg)}
+.op.conf{animation-name:sobe;}
+#convite.mostra .op.conf{animation:sobe .8s cubic-bezier(.2,.8,.2,1) forwards,pulsa 2.4s 2s infinite}
+.sheet .lista li{opacity:0;transform:translateY(12px)}
+.sheet.on .lista li{animation:sobe .5s cubic-bezier(.2,.8,.2,1) forwards}
+.sheet.on .lista li:nth-child(2){animation-delay:.08s}.sheet.on .lista li:nth-child(3){animation-delay:.16s}
+.sheet.on .lista li:nth-child(4){animation-delay:.24s}.sheet.on .lista li:nth-child(5){animation-delay:.32s}.sheet.on .lista li:nth-child(6){animation-delay:.4s}
+
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
@@ -158,8 +215,8 @@ input::placeholder{color:rgba(230,236,248,.4)}
 
 <!-- ===== CAPA: o convite chega fechado ===== -->
 <section id="capa">
- <div class="capa-top">VOCÊ RECEBEU UM CONVITE</div>
- <div class="capa-nome gold glow">Letícia Maria</div>
+ <div class="capa-txt"><div class="capa-top">VOCÊ RECEBEU UM CONVITE</div>
+ <div class="capa-nome gold glow">Letícia Maria</div></div>
  <div class="env" id="env" aria-hidden="true">
   <div class="back"></div>
   <div class="card"><div class="mini gold">15 anos</div><small>28 · 12</small></div>
@@ -175,7 +232,12 @@ input::placeholder{color:rgba(230,236,248,.4)}
 <main id="convite" class="hidden">
  <header class="head">
   <div class="pre rev" style="animation-delay:.05s">Com alegria, convidamos você para os</div>
-  <div class="meus gold glow rev" style="animation-delay:.15s">Meus 15 anos</div>
+  <figure class="hero rev" id="hero" style="animation-delay:.1s;margin-top:4px">
+   <div class="raios"></div><div class="halo"></div><div class="arco"></div>
+   <img id="boneca" src="boneca.png" alt="Letícia Maria" onerror="document.getElementById('hero').classList.add('hidden')">
+   <div class="orb" id="orb"></div>
+  </figure>
+  <div class="meus gold glow rev" style="animation-delay:.35s">Meus 15 anos</div>
   <div class="name rev" style="animation-delay:.25s">LETÍCIA MARIA</div>
   <svg class="divider rev" style="animation-delay:.35s" viewBox="-150 -10 300 20" aria-hidden="true"><defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#d9dfe9" stop-opacity="0"/><stop offset=".15" stop-color="#d9dfe9"/><stop offset=".85" stop-color="#d9dfe9"/><stop offset="1" stop-color="#d9dfe9" stop-opacity="0"/></linearGradient></defs>
    <rect x="-150" y="-.7" width="300" height="1.4" fill="url(#lg)"/><path d="M-150 0 l5 -4 5 4 -5 4Z M150 0 l-5 -4 -5 4 5 4Z" fill="#d9dfe9"/><circle r="8" fill="#0b1f66" stroke="#d9dfe9" stroke-width="1.4"/><circle r="2.6" fill="#d9dfe9"/></svg>
@@ -190,7 +252,7 @@ input::placeholder{color:rgba(230,236,248,.4)}
   <button class="op rev" style="animation-delay:.86s" data-abre="local"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg></span>Local</button>
   <button class="op conf rev" style="animation-delay:.95s" data-abre="confirmar"><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>CONFIRMAR PRESENÇA</button>
  </nav>
- <footer class="rev" style="animation-delay:1.05s">Com carinho, família da Letícia Maria</footer>
+ <footer class="rev" style="animation-delay:1.05s">Com carinho, Letícia e família.</footer>
 </main>
 
 <div class="fundo" id="fundo"></div>
@@ -286,18 +348,48 @@ for (let i = 0; i < 90; i++) {
   sky.appendChild(s);
 }
 
+// explosão de estrelinhas a partir de um ponto
+function explode(x, y, n = 28, raio = 160) {
+  for (let i = 0; i < n; i++) {
+    const f = document.createElement('i'), a = Math.random() * Math.PI * 2, d = raio * (.4 + Math.random() * .8);
+    f.className = 'faisca';
+    f.style.cssText = `left:${x}px;top:${y}px;--t:${6 + Math.random() * 10}px;--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d}px;--r:${Math.random() * 360}deg;--d:${.9 + Math.random() * .8}s`;
+    document.body.appendChild(f); setTimeout(() => f.remove(), 1900);
+  }
+}
+// estrelas cadentes de vez em quando
+function cadente() {
+  const c = document.createElement('i'); c.className = 'cadente';
+  c.style.setProperty('--x', (innerWidth * (.4 + Math.random() * .7)) + 'px');
+  c.style.setProperty('--y', (innerHeight * Math.random() * .45) + 'px');
+  document.body.appendChild(c); setTimeout(() => c.remove(), 1500);
+  setTimeout(cadente, 2500 + Math.random() * 4000);
+}
+setTimeout(cadente, 1200);
+// brilhos em volta da boneca
+for (let i = 0; i < 9; i++) {
+  const o = document.createElement('i'), a = Math.random() * Math.PI * 2, r = 38 + Math.random() * 12;
+  o.style.cssText = `left:${50 + Math.cos(a) * r}%;top:${48 + Math.sin(a) * r * 1.1}%;animation-delay:${Math.random() * 2.4}s;width:${6 + Math.random() * 8}px;height:${6 + Math.random() * 8}px`;
+  $('orb').appendChild(o);
+}
+
 // abrir o envelope
 $('abrir').onclick = () => {
   $('abrir').disabled = true;
+  $('capa').classList.add('abrindo');
+  const sl = document.querySelector('.env .seal').getBoundingClientRect();
+  explode(sl.left + sl.width / 2, sl.top + sl.height / 2, 24, 120);
   $('env').classList.add('aberto');
-  setTimeout(() => $('capa').classList.add('sai'), 1700);
+  setTimeout(() => $('env').classList.add('zoom'), 1600);
+  setTimeout(() => $('capa').classList.add('sai'), 2100);
   setTimeout(() => {
     $('capa').classList.add('hidden');
     document.body.classList.remove('lock');
     $('convite').classList.remove('hidden');
-    requestAnimationFrame(() => $('convite').classList.add('mostra'));
     window.scrollTo(0, 0);
-  }, 2400);
+    requestAnimationFrame(() => $('convite').classList.add('mostra'));
+    setTimeout(() => explode(innerWidth / 2, Math.min(innerHeight * .35, 300), 40, 220), 500);
+  }, 2700);
 };
 
 // janelas (dress code, presentes, manual, local, confirmar)
@@ -355,6 +447,7 @@ $('f').addEventListener('submit', async e => {
     $('okMsg').innerHTML = sent ? `Obrigada por avisar, <b>${esc(first)}</b>. Sentiremos sua falta!` : `<b>${esc(first)}</b>, toque no botão abaixo para avisar pelo WhatsApp.`;
   }
   $('confirmar').scrollTop = 0;
+  if (vai === 'Sim') setTimeout(() => explode(innerWidth / 2, innerHeight * .45, 36, 200), 250);
 });
 </script>
 </body>
