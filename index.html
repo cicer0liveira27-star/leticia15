@@ -630,9 +630,9 @@ const ceu = (() => {
   return { parar: () => { vivo = false; } };
 })();
 
-// ===== música de fundo: arquivo musica.mp3 na mesma pasta do site =====
+// ===== música de fundo: arquivo de áudio na mesma pasta do site =====
 // começa ao tocar no lacre, com volume subindo devagar; o botão de nota pausa e retoma
-const trilha = new Audio('musica.mp3');
+const trilha = new Audio('Christina_Perri_-_A_Thousand_years_instrumental_version_%28mp3.pm%29.mp3');
 trilha.loop = true; trilha.preload = 'auto';
 let temMusica = true;
 trilha.addEventListener('error', () => { temMusica = false; $('som').classList.add('hidden'); });
