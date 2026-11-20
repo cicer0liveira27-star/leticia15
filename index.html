@@ -6,6 +6,19 @@
 <title>Convite · 15 anos da Letícia Maria</title>
 <meta property="og:title" content="15 anos da Letícia Maria ✨">
 <meta property="og:description" content="Noite Estrelada · 28 de dezembro, às 21h · Casa Cardeal Recepções">
+<meta name="description" content="Noite Estrelada · 28 de dezembro, às 21h · Casa Cardeal Recepções">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://leticia-correia.github.io/">
+<meta property="og:site_name" content="15 anos da Letícia Maria">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:image" content="https://leticia-correia.github.io/convite-preview.jpg">
+<meta property="og:image:secure_url" content="https://leticia-correia.github.io/convite-preview.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Convite dos 15 anos da Letícia Maria — Noite Estrelada">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://leticia-correia.github.io/convite-preview.jpg">
 <script src="config.js"></script>
 <script>
 const CFG = window.CONFIG || {};
@@ -232,6 +245,19 @@ input::placeholder{color:rgba(230,236,248,.4)}
 .quando{margin:20px 0 4px;text-align:center;font-family:Poiret,sans-serif;font-size:clamp(26px,8.6vw,34px);letter-spacing:1px;color:#f4f6fb;white-space:nowrap}
 .quando i{font-style:normal;font-size:20px;vertical-align:middle;margin:0 8px;color:#e6ebf5}
 .onde{text-align:center;margin:6px 0 22px}
+/* contador regressivo */
+.contador{margin:16px auto 6px;text-align:center}
+.contador .tit{font-family:Poiret,sans-serif;font-size:11.5px;letter-spacing:.42em;margin-left:.42em;color:#cfd8ec}
+.contador .caixas{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:340px;margin:10px auto 0}
+.contador .cx{position:relative;padding:12px 0 9px;border-radius:18px;border:1.3px solid rgba(217,223,233,.6);background:rgba(10,29,99,.55);
+ box-shadow:inset 0 0 14px rgba(207,222,255,.08),0 0 14px rgba(207,222,255,.12)}
+.contador .n{display:block;font-family:Poiret,sans-serif;font-weight:600;font-size:clamp(26px,8vw,32px);line-height:1;font-variant-numeric:tabular-nums;
+ background:linear-gradient(180deg,#ffffff 0%,#eef1f7 42%,#b3bccc 58%,#ffffff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+ filter:drop-shadow(0 0 6px rgba(207,222,255,.35))}
+.contador .u{display:block;margin-top:6px;font-family:Poiret,sans-serif;font-size:10px;letter-spacing:.22em;color:#cfd8ec}
+.contador .n.tic{animation:tic .45s ease}
+@keyframes tic{0%{opacity:.35;transform:translateY(-4px)}100%{opacity:1;transform:none}}
+.contador .hoje{font-family:Swash;font-size:46px;line-height:1.1;margin-top:6px}
 .head .divider{margin-bottom:22px}
 .onde b{display:block;font-family:Bask,serif;font-weight:400;font-size:clamp(15px,4.6vw,20px);letter-spacing:1.2px;color:#fff;white-space:nowrap}
 .onde span{font-family:LoraI,serif;font-size:14.5px;color:#d9e0ef}
@@ -452,6 +478,15 @@ input::placeholder{color:rgba(230,236,248,.4)}
    <span>VINCENT VAN GOGH</span>
   </div>
   <div class="quando rev" style="animation-delay:1.45s">28<i>✦</i>DEZEMBRO<i>✦</i>21h</div>
+  <div class="contador rev" id="contador" style="animation-delay:1.48s" aria-live="off">
+   <div class="tit">FALTAM</div>
+   <div class="caixas" id="caixas">
+    <div class="cx"><span class="n" id="cd-d">--</span><span class="u" id="cd-du">DIAS</span></div>
+    <div class="cx"><span class="n" id="cd-h">--</span><span class="u">HORAS</span></div>
+    <div class="cx"><span class="n" id="cd-m">--</span><span class="u">MIN</span></div>
+    <div class="cx"><span class="n" id="cd-s">--</span><span class="u">SEG</span></div>
+   </div>
+  </div>
   <svg class="divider rev" style="animation-delay:1.5s" viewBox="-150 -10 300 20" aria-hidden="true"><defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#d9dfe9" stop-opacity="0"/><stop offset=".15" stop-color="#d9dfe9"/><stop offset=".85" stop-color="#d9dfe9"/><stop offset="1" stop-color="#d9dfe9" stop-opacity="0"/></linearGradient></defs>
    <rect x="-150" y="-.7" width="300" height="1.4" fill="url(#lg)"/><path d="M-150 0 l5 -4 5 4 -5 4Z M150 0 l-5 -4 -5 4 5 4Z" fill="#d9dfe9"/><circle r="8" fill="#0b1f66" stroke="#d9dfe9" stroke-width="1.4"/><circle r="2.6" fill="#d9dfe9"/></svg>
  </header>
@@ -583,6 +618,27 @@ for (let i = 0; i < 18; i++) {
   v.style.cssText = `left:${50 + (Math.random() - .5) * (30 + y * 80)}%;top:${y * 100}%;--t:${5 + Math.random() * 9}px;--a:${Math.random() * 2.6}s`;
   $('vestido').appendChild(v);
 }
+
+// ===== contador regressivo até a festa (28/12, 21h, horário de Recife) =====
+(function contador() {
+  const FESTA = new Date('2026-12-28T21:00:00-03:00').getTime(), FIM = FESTA + 6 * 3600e3;
+  const pad = n => String(n).padStart(2, '0');
+  const set = (id, v) => { const el = $(id); if (el.textContent !== v) { el.textContent = v; el.classList.remove('tic'); void el.offsetWidth; el.classList.add('tic'); } };
+  function passo() {
+    const agora = Date.now(), falta = FESTA - agora;
+    if (falta <= 0) {
+      $('contador').innerHTML = agora < FIM
+        ? '<div class="tit">A FESTA JÁ COMEÇOU</div><div class="hoje gold glow">É hoje!</div>'
+        : '<div class="tit">OBRIGADA POR FAZER PARTE</div><div class="hoje gold glow">Noite inesquecível</div>';
+      return;
+    }
+    const s = Math.floor(falta / 1000), d = Math.floor(s / 86400);
+    set('cd-d', String(d)); $('cd-du').textContent = d === 1 ? 'DIA' : 'DIAS';
+    set('cd-h', pad(Math.floor(s % 86400 / 3600))); set('cd-m', pad(Math.floor(s % 3600 / 60))); set('cd-s', pad(s % 60));
+    setTimeout(passo, 1000 - (agora % 1000) + 5);
+  }
+  passo();
+})();
 
 // ===== céu da capa: Via Láctea e estrelas cintilantes (canvas) =====
 const ceu = (() => {
