@@ -1,6 +1,7 @@
 // Google Apps Script — recebe as confirmações do site, grava na planilha
 // e entrega a lista para a página de admin (protegida por senha).
 const SENHA_ADMIN = 'Master@2026';   // senha do painel de admin
+const PLANILHA_ID = '168mDcju2Ww8dVZ6AawAKXreKmaMs3XuVXCarVGCxdCg'; // sua planilha
 const ABA = 'Confirmações';
 const CAB = ['Data/hora', 'Nome', 'Idade', 'Vai?'];
 
@@ -8,7 +9,7 @@ function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const ss = SpreadsheetApp.openById(PLANILHA_ID);
     let sh = ss.getSheetByName(ABA);
     if (!sh) sh = ss.insertSheet(ABA);
     if (sh.getLastRow() === 0) {
@@ -28,7 +29,7 @@ function doPost(e) {
 function doGet(e) {
   const out = o => ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);
   if (!e || !e.parameter || e.parameter.key !== SENHA_ADMIN) return out({ ok: false, erro: 'senha' });
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(ABA);
+  const sh = SpreadsheetApp.openById(PLANILHA_ID).getSheetByName(ABA);
   if (e.parameter.acao === 'excluir') return out(excluir(sh, e.parameter.data, e.parameter.nome));
   if (!sh || sh.getLastRow() < 2) return out({ ok: true, rows: [] });
   const rows = sh.getRange(2, 1, sh.getLastRow() - 1, CAB.length).getValues().map(r => ({
