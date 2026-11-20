@@ -98,6 +98,11 @@ const URL_API = (window.CONFIG || {}).SCRIPT_URL || "";
 let key = "", rows = [], filtro = "todos";
 try { key = sessionStorage.getItem('adm_key') || ""; } catch (e) {}
 const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// padroniza nomes: "cÍCERO  alves DA silva" -> "Cícero Alves da Silva"
+const PARTICULAS = new Set(['da', 'de', 'do', 'das', 'dos', 'e', 'di', 'du', 'del', 'van', 'von']);
+const padronizaNome = t => String(t ?? '').trim().replace(/\s+/g, ' ').toLocaleLowerCase('pt-BR').split(' ')
+  .map((p, i) => i > 0 && PARTICULAS.has(p) ? p : p.split(/([-'’])/).map(s => s.charAt(0).toLocaleUpperCase('pt-BR') + s.slice(1)).join(''))
+  .join(' ');
 const norm = t => String(t ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
 const fmt = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }); };
 
@@ -106,7 +111,7 @@ async function carregar() {
   const r = await fetch(`${URL_API}?key=${encodeURIComponent(key)}&t=${Date.now()}`);
   const j = await r.json();
   if (!j.ok) return false;
-  rows = j.rows.slice().reverse();
+  rows = j.rows.slice().reverse().map(r => ({ ...r, nomeOriginal: r.nome, nome: padronizaNome(r.nome) }));
   render(); $('upd').textContent = 'Atualizado às ' + new Date().toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
   return true;
 }
@@ -141,7 +146,7 @@ $('lista').addEventListener('click', async e => {
   if (!confirm(`Excluir a resposta de "${r.nome}" (${fmt(r.data)})?\nIsso apaga a linha da planilha.`)) return;
   b.disabled = true; b.textContent = 'EXCLUINDO...';
   try {
-    const res = await fetch(`${URL_API}?key=${encodeURIComponent(key)}&acao=excluir&data=${encodeURIComponent(r.data)}&nome=${encodeURIComponent(r.nome)}&t=${Date.now()}`);
+    const res = await fetch(`${URL_API}?key=${encodeURIComponent(key)}&acao=excluir&data=${encodeURIComponent(r.data)}&nome=${encodeURIComponent(r.nomeOriginal ?? r.nome)}&t=${Date.now()}`);
     const j = await res.json();
     if (j.excluido) { await carregar(); return; }
     alert(j.erro === 'nao_encontrado' ? 'Essa resposta não foi encontrada na planilha. Toque em ↻ para atualizar.'

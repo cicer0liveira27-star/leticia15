@@ -773,10 +773,15 @@ $('fundo').onclick = fecha;
 document.addEventListener('keydown', e => { if (e.key === 'Escape') fecha(); });
 
 // confirmação
+// padroniza nomes: "cÍCERO  alves DA silva" -> "Cícero Alves da Silva"
+const PARTICULAS = new Set(['da', 'de', 'do', 'das', 'dos', 'e', 'di', 'du', 'del', 'van', 'von']);
+const padronizaNome = t => String(t ?? '').trim().replace(/\s+/g, ' ').toLocaleLowerCase('pt-BR').split(' ')
+  .map((p, i) => i > 0 && PARTICULAS.has(p) ? p : p.split(/([-'’])/).map(s => s.charAt(0).toLocaleUpperCase('pt-BR') + s.slice(1)).join(''))
+  .join(' ');
 const val = n => document.querySelector(`input[name=${n}]:checked`).value;
 $('f').addEventListener('submit', async e => {
   e.preventDefault(); $('err').textContent = '';
-  const nome = $('nome').value.trim(), idade = $('idade').value.trim(), vai = val('vai');
+  const nome = padronizaNome($('nome').value), idade = $('idade').value.trim(), vai = val('vai');
   if (!nome) return $('err').textContent = 'Por favor, digite seu nome.';
   if (!idade) return $('err').textContent = 'Por favor, informe sua idade.';
   const first = nome.split(' ')[0];
