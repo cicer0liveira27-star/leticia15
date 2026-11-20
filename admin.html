@@ -51,6 +51,15 @@ input::placeholder{color:rgba(230,236,248,.4)}
 .tag{font-family:Poiret,sans-serif;font-size:12px;letter-spacing:1.4px;padding:3px 10px;border-radius:12px;white-space:nowrap;font-weight:600}
 .tag.sim{background:linear-gradient(180deg,#ffffff,#d5dce8);color:#0b1a48}.tag.nao{border:1px solid rgba(255,214,214,.7);color:#ffd6d6}
 .item .meta{font-size:14px;color:#cdd8f0;margin-top:4px;line-height:1.45}
+.item .meta{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.del{flex:0 0 auto;font-family:Poiret,sans-serif;font-size:12px;letter-spacing:1.4px;padding:6px 12px;border-radius:14px;cursor:pointer;
+ border:1px solid rgba(255,214,214,.7);background:rgba(255,120,140,.08);color:#ffd6d6}
+.del:hover{background:rgba(255,120,140,.2)}
+.del:disabled{opacity:.5;cursor:default}
+.dup{display:inline-block;margin-left:8px;font-family:Poiret,sans-serif;font-size:11px;letter-spacing:1.2px;padding:2px 8px;border-radius:10px;
+ border:1px solid #ffd98a;color:#ffd98a;vertical-align:middle}
+.item.repetido{border-color:rgba(255,217,138,.65)}
+.aviso{text-align:center;font-size:14px;color:#ffd98a;margin:0 0 12px;min-height:0}
 .empty{text-align:center;color:#cdd8f0;padding:20px 0}
 .foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:16px;font-size:13px;color:#aebbd6;flex-wrap:wrap}
 @media(max-width:460px){.tiles{grid-template-columns:repeat(2,1fr)}.tile.main{grid-column:span 2}}
@@ -77,6 +86,7 @@ input::placeholder{color:rgba(230,236,248,.4)}
   </div>
   <div class="bar"><input id="busca" type="search" placeholder="Buscar por nome"><button class="pill ghost" id="atualizar" type="button">↻</button></div>
   <div class="tabs" id="tabs"><button data-f="todos" class="on">TODOS</button><button data-f="Sim">VÃO</button><button data-f="Não">NÃO VÃO</button></div>
+  <div class="aviso" id="aviso"></div>
   <div class="list" id="lista"></div>
   <div class="foot"><span id="upd"></span><span><button class="pill" id="exportar" type="button">⬇ EXPORTAR XLSX</button> <button class="pill ghost" id="copiar" type="button">COPIAR LISTA</button> <button class="pill ghost" id="sair" type="button">SAIR</button></span></div>
  </div>
@@ -88,6 +98,7 @@ const URL_API = (window.CONFIG || {}).SCRIPT_URL || "";
 let key = "", rows = [], filtro = "todos";
 try { key = sessionStorage.getItem('adm_key') || ""; } catch (e) {}
 const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm = t => String(t ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
 const fmt = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }); };
 
 async function carregar() {
@@ -104,10 +115,14 @@ function render() {
   $('tTotal').textContent = sim.length;
   $('tNao').textContent = nao.length; $('tResp').textContent = rows.length;
   const q = $('busca').value.trim().toLowerCase();
-  const vis = rows.filter(r => (filtro === 'todos' || r.vai === filtro) && (!q || String(r.nome).toLowerCase().includes(q)));
-  $('lista').innerHTML = vis.length ? vis.map(r => `
-    <div class="item"><div class="top"><span class="n">${esc(r.nome)}</span><span class="tag ${r.vai === 'Sim' ? 'sim' : 'nao'}">${r.vai === 'Sim' ? 'VAI' : 'NÃO VAI'}</span></div>
-    <div class="meta">${esc(r.idade)} anos<br><small>${fmt(r.data)}</small></div></div>`).join('')
+  // nomes repetidos (mesmo nome, sem diferenciar acentos/maiúsculas)
+  const cont = {}; rows.forEach(r => { const k = norm(r.nome); cont[k] = (cont[k] || 0) + 1; });
+  const nDup = Object.values(cont).filter(v => v > 1).length;
+  $('aviso').textContent = nDup ? `✦ ${nDup} nome${nDup > 1 ? 's' : ''} repetido${nDup > 1 ? 's' : ''}. Exclua as respostas duplicadas para a contagem ficar certa.` : '';
+  const vis = rows.map((r, i) => [r, i]).filter(([r]) => (filtro === 'todos' || r.vai === filtro) && (!q || String(r.nome).toLowerCase().includes(q)));
+  $('lista').innerHTML = vis.length ? vis.map(([r, i]) => { const rep = cont[norm(r.nome)] > 1; return `
+    <div class="item${rep ? ' repetido' : ''}"><div class="top"><span class="n">${esc(r.nome)}${rep ? '<span class="dup">REPETIDO</span>' : ''}</span><span class="tag ${r.vai === 'Sim' ? 'sim' : 'nao'}">${r.vai === 'Sim' ? 'VAI' : 'NÃO VAI'}</span></div>
+    <div class="meta"><span>${esc(r.idade)} anos<br><small>${fmt(r.data)}</small></span><button class="del" type="button" data-i="${i}">✕ EXCLUIR</button></div></div>`; }).join('')
     : '<div class="empty">Nenhuma confirmação ainda.</div>';
 }
 async function entrar(silencioso) {
@@ -119,6 +134,21 @@ async function entrar(silencioso) {
 $('login').addEventListener('submit', e => { e.preventDefault(); $('lerr').textContent = ''; key = $('senha').value; entrar(false); });
 $('busca').addEventListener('input', render);
 $('tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; filtro = b.dataset.f; [...$('tabs').children].forEach(x => x.classList.toggle('on', x === b)); render(); });
+// excluir uma resposta (ex.: nome duplicado)
+$('lista').addEventListener('click', async e => {
+  const b = e.target.closest('.del'); if (!b) return;
+  const r = rows[+b.dataset.i]; if (!r) return;
+  if (!confirm(`Excluir a resposta de "${r.nome}" (${fmt(r.data)})?\nIsso apaga a linha da planilha.`)) return;
+  b.disabled = true; b.textContent = 'EXCLUINDO...';
+  try {
+    const res = await fetch(`${URL_API}?key=${encodeURIComponent(key)}&acao=excluir&data=${encodeURIComponent(r.data)}&nome=${encodeURIComponent(r.nome)}&t=${Date.now()}`);
+    const j = await res.json();
+    if (j.excluido) { await carregar(); return; }
+    alert(j.erro === 'nao_encontrado' ? 'Essa resposta não foi encontrada na planilha. Toque em ↻ para atualizar.'
+      : 'O script da planilha ainda não tem a função de excluir. Atualize o Code.gs no Apps Script e publique uma nova versão (veja o LEIA-ME).');
+  } catch (err) { alert('Não foi possível excluir agora. Verifique a internet e tente de novo.'); }
+  b.disabled = false; b.textContent = '✕ EXCLUIR';
+});
 $('atualizar').onclick = () => carregar().catch(() => {});
 $('sair').onclick = () => { try { sessionStorage.removeItem('adm_key'); } catch (e) {} location.reload(); };
 $('copiar').onclick = async () => {

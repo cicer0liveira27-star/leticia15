@@ -29,12 +29,35 @@ function doGet(e) {
   const out = o => ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);
   if (!e || !e.parameter || e.parameter.key !== SENHA_ADMIN) return out({ ok: false, erro: 'senha' });
   const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(ABA);
+  if (e.parameter.acao === 'excluir') return out(excluir(sh, e.parameter.data, e.parameter.nome));
   if (!sh || sh.getLastRow() < 2) return out({ ok: true, rows: [] });
   const rows = sh.getRange(2, 1, sh.getLastRow() - 1, CAB.length).getValues().map(r => ({
     data: r[0] instanceof Date ? r[0].toISOString() : String(r[0]),
     nome: r[1], idade: r[2], vai: r[3]
   }));
   return out({ ok: true, rows });
+}
+
+// Exclui uma resposta (ex.: nome repetido). Acha a linha pela data/hora + nome.
+function excluir(sh, data, nome) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    if (!sh || sh.getLastRow() < 2) return { ok: false, excluido: false, erro: 'nao_encontrado' };
+    const alvo = new Date(data).getTime();
+    const vals = sh.getRange(2, 1, sh.getLastRow() - 1, 2).getValues();
+    for (let i = vals.length - 1; i >= 0; i--) {
+      const d = vals[i][0], n = String(vals[i][1]).trim();
+      const mesmaData = d instanceof Date ? Math.abs(d.getTime() - alvo) < 1000 : String(d) === String(data);
+      if (mesmaData && n === String(nome).trim()) {
+        sh.deleteRow(i + 2);
+        return { ok: true, excluido: true };
+      }
+    }
+    return { ok: false, excluido: false, erro: 'nao_encontrado' };
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 // Aba "Resumo": total de pessoas confirmadas, atualizado sozinho.

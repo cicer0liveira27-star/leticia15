@@ -15,7 +15,8 @@ ARQUIVOS
         Executar como: Eu  |  Quem pode acessar: Qualquer pessoa
       Implante e autorize com sua conta Google.
    e. Copie a URL que termina em /exec e cole em config.js, em SCRIPT_URL.
-   (Se mudar o Code.gs depois: Implantar > Gerenciar implantações > editar > Nova versão.)
+   (Se mudar o Code.gs depois: Implantar > Gerenciar implantações > editar (lápis) > Versão: Nova versão > Implantar.
+    O link /exec continua o mesmo. Isso é necessário para o botão EXCLUIR do admin funcionar.)
 
 2) PUBLICAR (GitHub Pages)
    Novo repositório (ex.: leticia15) com index.html, admin.html e config.js.
