@@ -256,6 +256,18 @@ input::placeholder{color:rgba(230,236,248,.4)}
 .sheet.on .lista li:nth-child(2){animation-delay:.08s}.sheet.on .lista li:nth-child(3){animation-delay:.16s}
 .sheet.on .lista li:nth-child(4){animation-delay:.24s}.sheet.on .lista li:nth-child(5){animation-delay:.32s}.sheet.on .lista li:nth-child(6){animation-delay:.4s}
 
+/* nossa música (player oficial do YouTube) */
+.nossa{margin:0 0 22px;padding:16px 16px 14px;border-radius:24px;border:1.4px solid rgba(217,223,233,.6);background:rgba(10,29,99,.55);text-align:center}
+.nossa .tt{font-family:Poiret,sans-serif;font-size:13px;letter-spacing:2.4px;color:#e6ebf5}
+.nossa .mus{font-family:Nyc,cursive;font-size:30px;margin:4px 0 0}
+.nossa .art{font-family:LoraI,serif;font-size:14px;color:#c9d2e6;margin-bottom:12px}
+.tocar{display:inline-flex;align-items:center;gap:12px;padding:10px 20px 10px 10px;border-radius:30px;cursor:pointer;border:1.4px solid #fff;
+ font-family:Poiret,sans-serif;font-size:14px;letter-spacing:2px;font-weight:600;color:#0b1a48;background:linear-gradient(180deg,#ffffff,#d5dce8 55%,#a3adbf);box-shadow:0 0 14px rgba(207,222,255,.35)}
+.tocar .disco{width:34px;height:34px;border-radius:50%;background:repeating-radial-gradient(circle,#1b2433 0 2px,#2c3647 2px 3px);position:relative;animation:gira 4s linear infinite}
+.tocar .disco::after{content:"";position:absolute;inset:11px;border-radius:50%;background:radial-gradient(circle,#fff 0 2px,#c9d0db 2px)}
+.video{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;margin-top:4px;box-shadow:0 10px 24px rgba(0,0,0,.45)}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
 /* botão de música */
 .som{position:fixed;top:14px;right:14px;z-index:19;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;
  border:1.2px solid rgba(255,255,255,.7);background:rgba(10,29,99,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 0 14px rgba(207,222,255,.3)}
@@ -429,6 +441,14 @@ input::placeholder{color:rgba(230,236,248,.4)}
  </header>
  <p class="tema rev" style="animation-delay:1.65s">Uma <i>Noite Estrelada</i> para celebrar esse momento tão especial. Toque nas opções abaixo para ver todos os detalhes.</p>
 
+ <section class="nossa rev" style="animation-delay:1.7s" aria-label="Nossa música">
+  <div class="tt">✦ NOSSA MÚSICA ✦</div>
+  <div class="mus prata">A Thousand Years</div>
+  <div class="art">Christina Perri</div>
+  <button class="tocar" id="tocarMusica" type="button"><span class="disco"></span>OUVIR A MÚSICA</button>
+  <div class="video hidden" id="video"></div>
+ </section>
+
  <nav class="grid">
   <button class="op rev" style="animation-delay:1.75s" data-abre="dress"><span class="ic"><svg viewBox="0 0 24 24"><path d="M9 2v3l-2 4 2 2-5 11h16l-5-11 2-2-2-4V2"/><path d="M9 5h6"/></svg></span>Dress code</button>
   <button class="op rev" style="animation-delay:1.82s" data-abre="presentes"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8v13"/><path d="M12 8C10 4 6 4 7 7s5 1 5 1zM12 8c2-4 6-4 5-1s-5 1-5 1z"/></svg></span>Sugestões de presentes</button>
@@ -449,7 +469,7 @@ input::placeholder{color:rgba(230,236,248,.4)}
  <div class="centro"><span class="chip">ESPORTE FINO</span></div>
  <ul class="lista" style="margin-top:18px">
   <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M8 3l4 4 4-4 5 3-2 5h-2v10H7V11H5L3 6z"/><path d="M12 7v6"/></svg></span><div><b>Para eles</b><span>Esporte fino</span></div></li>
-  <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M9 2v3l-2 4 2 2-5 11h16l-5-11 2-2-2-4V2"/></svg></span><div><b>Para elas</b><span>Passeio (o equivalente feminino do esporte fino)</span></div></li>
+  <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M9 2v3l-2 4 2 2-5 11h16l-5-11 2-2-2-4V2"/></svg></span><div><b>Para elas</b><span>Esporte fino</span></div></li>
   <li class="alerta"><span class="ic"><span class="semazul"></span></span><div><b>Não use azul</b><span>O azul, em qualquer tom, é a cor reservada para a debutante nesta noite.</span></div></li>
  </ul>
 </section>
@@ -707,7 +727,14 @@ const musica = (() => {
 })();
 $('som').onclick = () => {
   if (musica.ligado) { musica.pausar(); $('som').classList.add('mudo'); $('som').setAttribute('aria-label', 'Ligar música'); }
-  else { musica.tocar(); $('som').classList.remove('mudo'); $('som').setAttribute('aria-label', 'Desligar música'); }
+  else { yt('pauseVideo'); musica.tocar(); $('som').classList.remove('mudo'); $('som').setAttribute('aria-label', 'Desligar música'); }
+};
+// player oficial do YouTube: ao dar play, a valsa de fundo pausa
+const yt = cmd => { const f = document.querySelector('#video iframe'); if (f) f.contentWindow.postMessage(JSON.stringify({ event: 'command', func: cmd, args: [] }), '*'); };
+$('tocarMusica').onclick = () => {
+  if (musica.ligado) { musica.pausar(); $('som').classList.add('mudo'); $('som').setAttribute('aria-label', 'Ligar música'); }
+  $('video').innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/rtOvBOTyX00?autoplay=1&playsinline=1&rel=0&enablejsapi=1" title="A Thousand Years · Christina Perri" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+  $('video').classList.remove('hidden'); $('tocarMusica').classList.add('hidden');
 };
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && musica.ligado) { musica.pausar(); $('som').dataset.auto = '1'; }
