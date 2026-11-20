@@ -705,6 +705,8 @@ $('abrir').onclick = () => {
   }, 2100);
   setTimeout(() => { $('capa').classList.add('hidden'); ceu.parar(); }, 3200);
 };
+// vindo do PDF (link com ?abrir): o envelope se abre sozinho
+if (/[?&]abrir/.test(location.search)) setTimeout(() => $('abrir').click(), 900);
 
 // janelas (dress code, presentes, manual, local, confirmar)
 let aberta = null;
