@@ -20,8 +20,8 @@ ARQUIVOS
 2) PUBLICAR (GitHub Pages)
    Novo repositório (ex.: leticia15) com index.html, admin.html e config.js.
    Settings > Pages > Branch: main / root.
-     Convidados:  https://SEU-USUARIO.github.io/leticia15/
-     Admin:       https://SEU-USUARIO.github.io/leticia15/admin.html
+     Convidados:  https://leticia-correia.github.io/
+     Admin:       https://leticia-correia.github.io/admin.html
 
 3) Mande o link dos convidados para eu colocar no botão "Confirmar presença" do PDF.
 
