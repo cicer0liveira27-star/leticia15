@@ -172,28 +172,46 @@ input::placeholder{color:rgba(230,236,248,.4)}
 /* título com brilho passando */
 .meus.gold,.capa-nome.gold{background-size:100% 220%;animation:brilho 4s ease-in-out infinite}
 @keyframes brilho{0%,100%{background-position:0 0}50%{background-position:0 100%}}
-/* destaque da boneca */
-.hero{position:relative;width:min(340px,84vw);aspect-ratio:4/5;margin:4px auto -18px;display:flex;align-items:flex-end;justify-content:center}
-.hero .raios{position:absolute;inset:-12%;border-radius:50%;
- background:repeating-conic-gradient(from 0deg,rgba(207,222,255,.16) 0 6deg,transparent 6deg 18deg);
- -webkit-mask:radial-gradient(circle,#000 18%,transparent 66%);mask:radial-gradient(circle,#000 18%,transparent 66%);animation:gira 40s linear infinite}
+/* ===== paisagem com a boneca ===== */
+.cena{position:relative;height:clamp(470px,128vw,560px);margin:6px -22px -40px;overflow:hidden;
+ -webkit-mask:linear-gradient(180deg,transparent 0,#000 9%,#000 84%,transparent 100%);mask:linear-gradient(180deg,transparent 0,#000 9%,#000 84%,transparent 100%)}
+.cena>*{position:absolute;pointer-events:none}
+.lua{left:50%;top:7%;width:62%;aspect-ratio:1;margin-left:-31%;border-radius:50%;
+ background:radial-gradient(circle at 42% 38%,#ffffff 0%,#f1f4fb 35%,#d7def0 62%,#b9c5e3 100%);
+ box-shadow:0 0 60px 18px rgba(214,226,255,.45),0 0 160px 60px rgba(120,160,255,.28)}
+.lua::after{content:"";position:absolute;inset:0;border-radius:50%;opacity:.18;
+ background:radial-gradient(circle at 30% 60%,rgba(150,165,200,.6) 0 7%,transparent 8%),radial-gradient(circle at 62% 30%,rgba(150,165,200,.5) 0 5%,transparent 6%),radial-gradient(circle at 70% 68%,rgba(150,165,200,.45) 0 9%,transparent 10%),radial-gradient(circle at 45% 82%,rgba(150,165,200,.4) 0 4%,transparent 5%)}
+.aura{left:50%;top:0;width:150%;height:100%;margin-left:-75%;
+ background:repeating-conic-gradient(from 0deg at 50% 33%,rgba(214,226,255,.09) 0 4deg,transparent 4deg 14deg);
+ -webkit-mask:radial-gradient(circle at 50% 33%,#000 10%,transparent 55%);mask:radial-gradient(circle at 50% 33%,#000 10%,transparent 55%);animation:gira 90s linear infinite}
 @keyframes gira{to{transform:rotate(360deg)}}
-.hero .halo{position:absolute;left:8%;right:8%;top:6%;bottom:10%;border-radius:50%;
- background:radial-gradient(circle,rgba(207,222,255,.55) 0%,rgba(94,140,255,.28) 38%,transparent 70%);animation:respira 4s ease-in-out infinite}
-@keyframes respira{0%,100%{transform:scale(.94);opacity:.75}50%{transform:scale(1.06);opacity:1}}
-.hero .moldura{position:absolute;left:9%;right:9%;top:2%;bottom:4%;z-index:2;animation:boia 5s ease-in-out infinite}
-.hero .arco{position:absolute;inset:0;z-index:2;border-radius:999px 999px 26px 26px;border:1.6px solid rgba(255,255,255,.85);
- box-shadow:0 0 26px rgba(207,222,255,.45),inset 0 0 26px rgba(11,26,72,.25)}
-.hero .arco::before{content:"";position:absolute;inset:7px;border-radius:inherit;border:1px dashed rgba(255,255,255,.3)}
-.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;border-radius:999px 999px 26px 26px;
- box-shadow:0 18px 34px rgba(0,0,0,.5)}
-@keyframes boia{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.hero .orb{position:absolute;inset:0;z-index:3;pointer-events:none}
-.hero .orb i{position:absolute;width:9px;height:9px;background:#fff;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);
- filter:drop-shadow(0 0 4px #fff);animation:pisca 2.4s ease-in-out infinite}
+.colinas{left:0;right:0;bottom:0;width:100%;height:52%}
+.nevoa{left:-30%;width:160%;height:26%;border-radius:50%;filter:blur(18px)}
+.nevoa.n1{bottom:16%;background:radial-gradient(ellipse at center,rgba(200,215,255,.32),transparent 70%);animation:deriva 16s ease-in-out infinite alternate}
+.nevoa.n2{bottom:2%;background:radial-gradient(ellipse at center,rgba(220,230,255,.42),transparent 70%);animation:deriva 12s ease-in-out infinite alternate-reverse}
+@keyframes deriva{from{transform:translateX(-6%)}to{transform:translateX(6%)}}
+.luz-chao{left:50%;bottom:7%;width:96%;height:16%;margin-left:-48%;border-radius:50%;
+ background:radial-gradient(ellipse,rgba(235,242,255,.85) 0%,rgba(150,185,255,.35) 40%,transparent 72%);filter:blur(4px);animation:respira 4.5s ease-in-out infinite}
+@keyframes respira{0%,100%{opacity:.75;transform:scaleX(.95)}50%{opacity:1;transform:scaleX(1.05)}}
+.boneca{left:50%;bottom:8%;height:74%;transform:translateX(-50%);z-index:2;
+ filter:drop-shadow(0 0 14px rgba(214,226,255,.45)) drop-shadow(0 18px 20px rgba(2,8,35,.55))}
+.boneca img{height:100%;width:auto;display:block}
+.vaga{left:0;top:0;right:0;bottom:0;z-index:3}
+.vaga i{position:absolute;bottom:8%;width:var(--t);height:var(--t);border-radius:50%;background:#fff;
+ box-shadow:0 0 6px 2px rgba(207,222,255,.9);opacity:0;animation:voa var(--d) linear infinite;animation-delay:var(--a)}
+@keyframes voa{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx),-340px)}}
+.vestido{left:50%;bottom:10%;width:62%;height:44%;margin-left:-31%;z-index:3}
+.vestido i{position:absolute;width:var(--t);height:var(--t);background:#fff;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);
+ filter:drop-shadow(0 0 3px #fff);animation:pisca 2.6s ease-in-out infinite;animation-delay:var(--a)}
 @keyframes pisca{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:1;transform:scale(1) rotate(90deg)}}
-#convite.mostra .hero.rev{animation:surge 1.3s cubic-bezier(.2,.8,.2,1) forwards}
-@keyframes surge{0%{opacity:0;transform:scale(.7) translateY(30px);filter:blur(8px)}100%{opacity:1;transform:none;filter:none}}
+/* entrada da paisagem */
+#convite.mostra .cena.rev{animation:sobe .01s forwards}
+#convite.mostra .lua{animation:nasce 2s cubic-bezier(.2,.8,.2,1) both}
+@keyframes nasce{from{opacity:0;transform:translateY(60px) scale(.8)}to{opacity:1;transform:none}}
+#convite.mostra .colinas{animation:sobeCol 1.6s cubic-bezier(.2,.8,.2,1) .3s both}
+@keyframes sobeCol{from{transform:translateY(40%);opacity:0}to{transform:none;opacity:1}}
+#convite.mostra .boneca{animation:surge 1.8s cubic-bezier(.2,.8,.2,1) .7s both}
+@keyframes surge{from{opacity:0;transform:translateX(-50%) translateY(40px) scale(.92);filter:blur(10px)}to{opacity:1;transform:translateX(-50%)}}
 /* botões: brilho que atravessa */
 .op{position:relative;overflow:hidden}
 .op::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;transform:skewX(-20deg);
@@ -233,27 +251,42 @@ input::placeholder{color:rgba(230,236,248,.4)}
 <main id="convite" class="hidden">
  <header class="head">
   <div class="pre rev" style="animation-delay:.05s">Com alegria, convidamos você para os</div>
-  <figure class="hero rev" id="hero" style="animation-delay:.1s;margin-top:4px">
-   <div class="raios"></div><div class="halo"></div>
-   <div class="moldura"><img id="boneca" src="boneca.jpg" alt="Letícia Maria" onerror="document.getElementById('hero').classList.add('hidden')"><div class="arco"></div></div>
-   <div class="orb" id="orb"></div>
-  </figure>
-  <div class="meus gold glow rev" style="animation-delay:.35s">Meus 15 anos</div>
-  <div class="name rev" style="animation-delay:.25s">LETÍCIA MARIA</div>
-  <svg class="divider rev" style="animation-delay:.35s" viewBox="-150 -10 300 20" aria-hidden="true"><defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#d9dfe9" stop-opacity="0"/><stop offset=".15" stop-color="#d9dfe9"/><stop offset=".85" stop-color="#d9dfe9"/><stop offset="1" stop-color="#d9dfe9" stop-opacity="0"/></linearGradient></defs>
+  <div class="cena rev" id="cena" aria-hidden="false">
+   <div class="aura"></div>
+   <div class="lua"></div>
+   <svg class="colinas" viewBox="0 0 400 200" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+     <linearGradient id="h1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a4fbf"/><stop offset="1" stop-color="#0b1d63"/></linearGradient>
+     <linearGradient id="h2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a3796"/><stop offset="1" stop-color="#071653"/></linearGradient>
+     <linearGradient id="h3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b62d6" stop-opacity=".9"/><stop offset="1" stop-color="#0c2275"/></linearGradient>
+    </defs>
+    <path d="M0 95 C60 60 110 80 160 70 S260 40 310 62 S380 70 400 58 V200 H0Z" fill="url(#h1)" opacity=".75"/>
+    <path d="M0 125 C50 100 90 120 140 108 S230 92 270 112 S350 100 400 118 V200 H0Z" fill="url(#h2)"/>
+    <path d="M0 160 C70 140 130 150 200 146 S330 140 400 156 V200 H0Z" fill="url(#h3)"/>
+   </svg>
+   <div class="nevoa n1"></div>
+   <div class="luz-chao"></div>
+   <picture class="boneca"><source srcset="boneca.webp" type="image/webp"><img src="boneca.png" alt="Ilustração da debutante de vestido azul"></picture>
+   <div class="vestido" id="vestido"></div>
+   <div class="nevoa n2"></div>
+   <div class="vaga" id="vaga"></div>
+  </div>
+  <div class="meus gold glow rev" style="animation-delay:1.2s;position:relative;z-index:2">Meus 15 anos</div>
+  <div class="name rev" style="animation-delay:1.35s">LETÍCIA MARIA</div>
+  <svg class="divider rev" style="animation-delay:1.45s" viewBox="-150 -10 300 20" aria-hidden="true"><defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#d9dfe9" stop-opacity="0"/><stop offset=".15" stop-color="#d9dfe9"/><stop offset=".85" stop-color="#d9dfe9"/><stop offset="1" stop-color="#d9dfe9" stop-opacity="0"/></linearGradient></defs>
    <rect x="-150" y="-.7" width="300" height="1.4" fill="url(#lg)"/><path d="M-150 0 l5 -4 5 4 -5 4Z M150 0 l-5 -4 -5 4 5 4Z" fill="#d9dfe9"/><circle r="8" fill="#0b1f66" stroke="#d9dfe9" stroke-width="1.4"/><circle r="2.6" fill="#d9dfe9"/></svg>
-  <div class="data rev" style="animation-delay:.45s"><div class="lado">SEGUNDA<br>DEZEMBRO</div><div class="d gold">28</div><div class="lado">ÀS 21H<br>RECIFE</div></div>
+  <div class="data rev" style="animation-delay:1.55s"><div class="lado">SEGUNDA<br>DEZEMBRO</div><div class="d gold">28</div><div class="lado">ÀS 21H<br>RECIFE</div></div>
  </header>
- <p class="tema rev" style="animation-delay:.55s">Uma <i>Noite Estrelada</i> para celebrar esse momento tão especial. Toque nas opções abaixo para ver todos os detalhes.</p>
+ <p class="tema rev" style="animation-delay:1.65s">Uma <i>Noite Estrelada</i> para celebrar esse momento tão especial. Toque nas opções abaixo para ver todos os detalhes.</p>
 
  <nav class="grid">
-  <button class="op rev" style="animation-delay:.65s" data-abre="dress"><span class="ic"><svg viewBox="0 0 24 24"><path d="M9 2v3l-2 4 2 2-5 11h16l-5-11 2-2-2-4V2"/><path d="M9 5h6"/></svg></span>Dress code</button>
-  <button class="op rev" style="animation-delay:.72s" data-abre="presentes"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8v13"/><path d="M12 8C10 4 6 4 7 7s5 1 5 1zM12 8c2-4 6-4 5-1s-5 1-5 1z"/></svg></span>Sugestões de presentes</button>
-  <button class="op rev" style="animation-delay:.79s" data-abre="manual"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/><path d="M9 7h7M9 11h5"/></svg></span>Manual do convidado</button>
-  <button class="op rev" style="animation-delay:.86s" data-abre="local"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg></span>Local</button>
-  <button class="op conf rev" style="animation-delay:.95s" data-abre="confirmar"><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>CONFIRMAR PRESENÇA</button>
+  <button class="op rev" style="animation-delay:1.75s" data-abre="dress"><span class="ic"><svg viewBox="0 0 24 24"><path d="M9 2v3l-2 4 2 2-5 11h16l-5-11 2-2-2-4V2"/><path d="M9 5h6"/></svg></span>Dress code</button>
+  <button class="op rev" style="animation-delay:1.82s" data-abre="presentes"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8v13"/><path d="M12 8C10 4 6 4 7 7s5 1 5 1zM12 8c2-4 6-4 5-1s-5 1-5 1z"/></svg></span>Sugestões de presentes</button>
+  <button class="op rev" style="animation-delay:1.89s" data-abre="manual"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/><path d="M9 7h7M9 11h5"/></svg></span>Manual do convidado</button>
+  <button class="op rev" style="animation-delay:1.96s" data-abre="local"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg></span>Local</button>
+  <button class="op conf rev" style="animation-delay:2.05s" data-abre="confirmar"><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>CONFIRMAR PRESENÇA</button>
  </nav>
- <footer class="rev" style="animation-delay:1.05s">Com carinho, Letícia e família.</footer>
+ <footer class="rev" style="animation-delay:2.15s">Com carinho, Letícia e família.</footer>
 </main>
 
 <div class="fundo" id="fundo"></div>
@@ -367,11 +400,16 @@ function cadente() {
   setTimeout(cadente, 2500 + Math.random() * 4000);
 }
 setTimeout(cadente, 1200);
-// brilhos em volta da boneca
-for (let i = 0; i < 9; i++) {
-  const o = document.createElement('i'), a = Math.random() * Math.PI * 2, r = 38 + Math.random() * 12;
-  o.style.cssText = `left:${50 + Math.cos(a) * r}%;top:${48 + Math.sin(a) * r * 1.1}%;animation-delay:${Math.random() * 2.4}s;width:${6 + Math.random() * 8}px;height:${6 + Math.random() * 8}px`;
-  $('orb').appendChild(o);
+// vagalumes subindo e brilhos no vestido
+for (let i = 0; i < 22; i++) {
+  const v = document.createElement('i');
+  v.style.cssText = `left:${Math.random() * 100}%;--t:${1.5 + Math.random() * 2.5}px;--d:${6 + Math.random() * 7}s;--a:${-Math.random() * 12}s;--dx:${(Math.random() - .5) * 80}px`;
+  $('vaga').appendChild(v);
+}
+for (let i = 0; i < 14; i++) {
+  const v = document.createElement('i'), y = Math.random();
+  v.style.cssText = `left:${50 + (Math.random() - .5) * (30 + y * 70)}%;top:${y * 100}%;--t:${5 + Math.random() * 8}px;--a:${Math.random() * 2.6}s`;
+  $('vestido').appendChild(v);
 }
 
 // abrir o envelope
