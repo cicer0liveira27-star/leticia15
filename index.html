@@ -34,39 +34,78 @@ body.lock{overflow:hidden}
 #sky i{position:absolute;border-radius:50%;background:#fff;animation:tw 3s ease-in-out infinite}
 @keyframes tw{0%,100%{opacity:.15}50%{opacity:1}}
 
-/* ===== CAPA: envelope fechado ===== */
-#capa{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;
- transition:opacity .9s ease,transform .9s ease}
-#capa.sai{opacity:0;transform:scale(1.08);pointer-events:none}
-.capa-top{font-family:Poiret,sans-serif;letter-spacing:3px;font-size:13px;color:#dfe6f5;margin-bottom:6px}
-.capa-nome{font-family:Nyc,cursive;font-size:44px;margin:0 0 26px}
-.env{position:relative;width:min(320px,82vw);aspect-ratio:3/2;perspective:1200px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.45));animation:flutua 4s ease-in-out infinite}
-@keyframes flutua{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.env .back{position:absolute;inset:0;border-radius:10px;background:linear-gradient(160deg,#e9edf5,#c5cdda)}
-.env .card{position:absolute;left:7%;right:7%;top:8%;bottom:8%;border-radius:8px;z-index:2;
- background:radial-gradient(120% 90% at 50% 20%,#1a3aa8,#0a1d63 70%);border:1px solid rgba(255,255,255,.7);
- display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 1s cubic-bezier(.2,.8,.2,1) .55s}
-.env .card .mini{font-family:Nyc,cursive;font-size:30px}
-.env .card small{font-family:Poiret,sans-serif;font-size:11px;letter-spacing:2px;color:#e6ebf5;margin-top:4px}
-.env .front{position:absolute;inset:0;z-index:3;border-radius:10px;
- background:linear-gradient(200deg,#f4f6fa,#d3d9e4);clip-path:polygon(0 0,50% 56%,100% 0,100% 100%,0 100%)}
-.env .front::after{content:"";position:absolute;inset:0;background:linear-gradient(25deg,transparent 49.6%,rgba(120,135,165,.35) 50%,transparent 50.6%),linear-gradient(-25deg,transparent 49.6%,rgba(120,135,165,.35) 50%,transparent 50.6%)}
-.env .flap{position:absolute;left:0;right:0;top:0;height:60%;z-index:4;transform-origin:top center;transition:transform .7s ease,z-index 0s .35s;
- background:linear-gradient(180deg,#fbfcfe,#d9dfe9);clip-path:polygon(0 0,100% 0,50% 100%);border-radius:10px 10px 0 0}
-.env .seal{position:absolute;left:50%;top:60%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;z-index:5;
- background:radial-gradient(circle at 35% 30%,#3d63d6,#14318f 60%,#0a1d63);box-shadow:0 3px 8px rgba(0,0,0,.4),inset 0 0 0 3px rgba(255,255,255,.25);
- display:flex;align-items:center;justify-content:center;font-family:Swash;font-size:34px;color:#eef2fa;transition:opacity .35s,transform .35s}
-.env.aberto{animation:none}
-.env.aberto .seal{opacity:0;transform:scale(.4)}
-.env.aberto .flap{transform:rotateX(180deg);z-index:1}
-.env.aberto .card{transform:translateY(-58%)}
-.btn-abrir{margin-top:34px;padding:15px 34px;border-radius:30px;border:1.4px solid #fff;cursor:pointer;font-family:Poiret,sans-serif;font-size:16px;letter-spacing:2.4px;font-weight:600;color:#0b1a48;
- background:linear-gradient(180deg,#ffffff,#d5dce8 55%,#a3adbf);box-shadow:0 0 0 0 rgba(207,222,255,.6);animation:pulsa 2.2s infinite}
-@keyframes pulsa{0%{box-shadow:0 0 0 0 rgba(207,222,255,.55)}70%{box-shadow:0 0 0 16px rgba(207,222,255,0)}100%{box-shadow:0 0 0 0 rgba(207,222,255,0)}}
-.capa-dica{font-family:LoraI,serif;font-size:14px;color:#c5d0ea;margin-top:14px}
+/* ===== CAPA: envelope de luxo em prata ===== */
+#capa{position:fixed;inset:0;z-index:5;overflow:hidden;background:#03061a;transition:opacity 1s ease}
+#capa.sai{opacity:0;pointer-events:none}
+#ceu{position:absolute;inset:0;width:100%;height:100%;transition:opacity 1.2s ease}
+#capa.abrindo #ceu{opacity:0;transition-delay:.9s}
+.envelope{position:absolute;top:0;bottom:0;left:50%;width:min(100vw,560px);transform:translateX(-50%);perspective:1400px}
+.aba{position:absolute;inset:0;width:100%;height:100%;overflow:visible;transition:transform 1.2s cubic-bezier(.6,0,.25,1),opacity 1.2s ease}
+.aba.cima{z-index:4;transform-origin:50% 0;filter:drop-shadow(0 10px 14px rgba(0,0,0,.55))}
+.aba.baixo{z-index:3;filter:drop-shadow(0 -6px 12px rgba(0,0,0,.45))}
+.aba.esq{z-index:2}.aba.dir{z-index:2}
+#capa.abrindo .aba.cima{transform:rotateX(178deg);opacity:0;transition-delay:.85s}
+#capa.abrindo .aba.baixo{transform:translateY(105%);transition-delay:1s}
+#capa.abrindo .aba.esq{transform:translateX(-105%);transition-delay:1.05s}
+#capa.abrindo .aba.dir{transform:translateX(105%);transition-delay:1.05s}
+.textura{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:.06;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAQAAABpN6lAAAA31klEQVR42m2dd/yO5RfHP1YhW8gW2TvZCSEUKSFkZI8yIiORvUeK7JAR2SMzKyMkGSkiyl5Z2cL798d9nvO9n2+/1/168XyfcT/3fV3nOudzPudzrke8zD+IJxA9uI4QNamJ7EhDcsQPCHEa8R1VGISYwg6E6O7vFGKePxpGNu6SnZocRYh0fIMQPRG5SYEQQ0iDWIsQlxEv2Gc/QgxCiEOILQixgG8RD8iK2MhFZtOEjYjvSYoQHyDmcQIxByHq0QnRFdGMxoj8iJcZwa8c4BficsK+62Lkgpf4pfehlT0qx2QSI8rQ3575gHKMssc/MYIjzEVkQqQnBeIBX9nANENURIg8dnsiLWITQvxGH0YgfudlG4ry/v0lESIuPRGFESIJL1EmNMy9KIb4GpGbRojd7LFXeiJqc5e9iKLcRYimtOKrqGmKHMPZxlpxF3EbkYyciHR0s5c72W2kQqTjCPkZiljNIhaylfcQogJiFMfpx2bEOYayGCEeIiYgRA0uUM3OOBkxAyEauZ1kRIxgFULkoDTF7JV3kQ1hcHPv0I8JnEaI6faeuzRD9OAy73OazxCioNtUIsQyREqEaGcTWBLRGvEPQjzgitjLRYTYyDpEHMRGLiOe4mczpiY8xSwy8LSZ207qUNbm7KrdyCJEYTOs5IhUdgu3uI0Q0xBiAr+w0y5/h/1/iNOI4VFz8zbiGkXJZOYvWlCcGeRFPIMQCRiH+M0GKw+lEWIAV82CxBlbtPHITXOeQ4jsiJWInuRnbjAoMV/aDCH2k5JEFKUmWRHtOc41hHiBg7SzURa1ucIHjOMKaxC9ba5Feq6yDtGE0WYLYggwmOTUQYgqCLEIUY97PgRvk9Mef8sYRC1EavcvZfkUIU4g7ttzy9mOSE9qxC7Er+ShNUI2MWPNRsYjelKPd8yWMtKQlxE1ESVojEQlJvKtnXYjQmaQM1lmQzKNi4iJCFGXNmTmHZ7kpdCMnaQTm0N/L2ES5c2znEDcoiFCZOB3d3O56MBDxE7EZDaad3hEZ7Ih8nKC5MwMnbMcQlRFNKM+IhniAWIUbRGTKGrvm0N8jiBzunPZhcxy85uTX2bvnERlJFbRluMI0ZHiNk6p+YTMfEdDlrEEMZV6vMd6xG5EQ0QmLtGQ3xD3uIv4jeqI12xsH7LcXZjsQmSmu5KNtsZLUZt77OaAOVJRlxftfc8yk8GU4gQbbdUOsleqIC5Rhmr8S2VO2rN/MBKRjj8Qlfxb09r/L5KTcSxCiFfIg4gXeU/wX0MzmnjMs4+dDoWkbuziK0RvkrCYC4ht9uqXiPOI16hAPSYCnyDEU8TlNmIiN5iGKEhamvNmaECm2JrE1vhVknHHnFNkLtv4u/fSiHcQf9jNit3sojMtEb8g9vK9vTOz/V8UUZYO5khf5QinzDHu4CXys5MPEIWZGrx9D5MQryJEP8bT0U5zlB8ZhxBtKchP9mx5RH1EPZ5hFmIh4hSiHuUQt2mFWGfvfYTIiSiDGOzPCrGV8+4FhCiEKM4C3uMkHXwCRHNb/ys4iJiK6GGueJYZc05zqH/YJ9aTCdEP8a+fJfAxdRhif79jltE8soYjxnIZcZNspCIn8fiHIqxHZKUb4nPECsQxxJUorz2N+BQhLUfs76H2zuDoYZ7lTcQbtLAQFFyQGGBhqgTr7AYjxzKHNS3Yg+iIGMKLNpNCzGA1laiP2EEvbrPKnGRZxBT2IlrQnzJkR8iscz+5EC3tmgqIixQ3zFUQIVrShJXcQ3zEPbJa/M6BSMpHsaBEEv7iMvtC+O+aB7meCJEb0YAFXKYkIitryE4589GRddiPb8nOZIQYSAcKWdAKjt2MR4g4XOAQ4i9k3/iVBdMrdOeuhb+/GId4BZGGg24XcTlIHxoid/ciCekDHxCHVAjR1xZDIqqY786JSMRc0pGLm/aVa1hgHrUhhUMz1tyMrA2lQk6vPgn4FHEBMdUc1mLEYMQZR5xlLYxmRfRksJn/er/UvIjydoODEJ+TG3GUVxHnmW/ocBQD+JY8dETE5x+H5R//BwEuZREiCSd5ngGiCBPIj1hDFzvVJp7kgcWDDWRAPE9fZtpqDG4ukbnAkpSnlAHa6KM9YpqFVLGO0Yi1XOJJTnKaqwykHM8g/vZPXGALc1hjnqOZQ5eLVEaU53tEOgbRKxaUKm3/p0SM9KmMHLk5ZeFxJq8wxp5dZfmBIrAzv3+grAHHXy0GyFZOJ1obUshKSa4yF/Gnvx4EqYk2y5sZiOiAuBV1MQ8Nuf3OGWTuVRxEPIf4mh8dVkWOAHqVsMXU0UDZX9x0hzrKrk9cRGxAtGEo4i7DqWfuegJtSEwrcrPFsp5NfEhBxPFgzuW+sQbP2EqZaksjDvmoxgheoCfiaRvP4LhEQ/OngRkHge4Goglj+IJxhsvFLFsotZjEFURHFtEJIcsqptHAz9qU+g7KtiLqcgMhcnHW3zOBLxBN7a/V1LWEJyWHfciC474nct0Qu8zpyjzLoMjbjvkHxjIL0Zc/qcll/kD05X3EambTkGmINuZDg/UVpM7FLOlNQm8GIQc0ZdxlCZGe/oxDzA4N4g3O++MNiLr+13ri0YJt9KacW0vE5D8xJyhLjyZyFXGKzgjxMuUQp9hgtvWOve8weVjJfNZREFGb0kisthe/M38/jqW0oAgfIkYgknDBbu9zhKhlZtmcLYh8lCIVd2iHOMNU2nLZPhfB/ZG57EEHbpoXzkBKfmM14gSvIkYjuvMZ18lmy+oiD8jM13xn50iM6MVaerEH8TTiLc/puyKyIUQrm38BYhSPyIMoSTxKIcZzmEVmTYFrTYFEGkYaXnqJ7aFxXu1OKJjPR/7KU5bq5gi9OzIbqfnN/PcbHLN8IR4dLBKMQ/bcfp4jD5kRxyiKaGFwpxrfkBTxJrtttY7hjuO83AiRiZ8QKznMYETc0FW0Mvokvj+ziUMcYAd/2YQ8opCf7bXACc6mGqMo6zP8LjMRty2s3TQkvonqiFE8wxjEUkQuhNjCeNaTkCns8dmKHJ3t//wsYEXIO/+DWEdXxDQ2+LsbIBYTx4BwBy4Y3/CGg+d3DWg9yylqUpmDoaWUILTaxVHERxShqiXaeRnBSJbSGbGTrAw0K2rKwQhiK4UcJi6iCNds3VShPmK+YW4h5lMT8SPxPMsKAEhMHJnhQ9Ew1pDkpC2dEYXI5AtE1ORTW1aNEO8jLnGExAgxlQFm0NkNFYr01GUKs/nQz5AQWYbSIdY3lkAkNQ6iN+KOkyOvI75igBApeAexg2GGBQ+w0SL7e2bmcwPUhEhGZ0Q3xGM+YKs9WxFxkayhLw7gyYdkpazdimhOC15FrPXMbpu/vzYVOW3Pv8Dn5hDfRkyyd6QgOwl5gHjeY/lqxAqe5X0/T37y2aMgIt1jiWGK4TRFtGUcogODWc8ArkWywSL8iBDHyWEGvs6GYLX9HROTOzjij+QRMY8/RsTnKVp7OtQ71oxsQnSmLrcZy5ss8lldyhH3D7kpaMsngeURQmQ0jBlJs2/ZlZVGlCITCZjKcqdSz/M2R+kZolqD/5+OnSoHwWG7xfyK1Ocr3iArLSmBeJ4kzCQpcscRRP8IVytO0YE+9vgt2pHUzb8cj+3RQnvuWVawEnGejIiT3DEfIzbyPa9ZZC5tpv8S5TnCh4gWzgKmMIrsU9JFDevX/uhT6oQ4xxyeTz5hz9xjC9V5yv7aiURR6lKXR6ShBWII15yZPcpsGnCMmuSjFyKFI/8R/oUVeIgYS2UOUsOeyxV1cYOMWxSFuYLo5+Dotpt3q/8A6bH8xk462iBm4WNEHlYymmd5i0JM4JoFwMzOEwZHUkQfOho0W8GHJEFUQ1QOvasoI/iVsShIVp9lLW86Ogp41Xi0QSzhe0QlG/EDRoxF6GlxiUFMZbS50dGsQPR30z9kic2fTrHUQoifzRR7INbzpg9BPlt4h5hg7IScjAvccyZ79K87M/Eyl2hhs5zRYFZjW66JDNcWMmJ9vhPwr0SWQBcWsZdViIcUshezcolkiPr8w1hETuYyGvENmRBHjI0V90nAUrY6bSGPDD9ZMnMe0Z4m/GCm/RwK+ZAbvMFIxDVEGpohRhvJ8Suymf2MC4j63LEQmsE+25tH1OE+laluzzxhaXawJIZwC5GYFlSLssoL9n82xHqqR9ZVmLoQL/uqK+cEYoS4/pwy5PUk5AJV+MroyQWOwV+NAlOiBOkZSFqWkMniQz+yIF6nBM9QloSkpxxNKMAyD7iXkTFGExGHyW/Jdz/EVKpSFzGfl0mIyERNsrlnquxoI3CqvyOKG0tcHlm06k5GGiKZQ5hubkqx1m9ATf9oUSLG6Tz2x12ssFKBtyy1PYFY56gihvs5aFFjSahUsZmB7GEnrXkiFrZs5hG+Abd5QHe+stsqwHLz548RhTnNfBrxCYkQE4hHDnO668yaenOK3chQwC2bmnuRJVDa5/1b9rOaI6Qmq/n6IMtbZgWuyNGY7iRGtGEI5xAb7cKnWfSWZW3LGcJ2yvLI3U8KgyziBvkRrXmFM7S357Yg1tvy6oDox9ueEQaQNwdnELNI46WyyYgvzbPU8QD3LWusONKEhjRFxOcnvkUMIw4/kN1t+1Px2GbzMqIyVxEj2Gee+pbz6+Koh75GTpoGWLG939ZQX1A/IKZxjC/5hZ2sR1SmIt8gtlviIj5mkAFtWb1AVt5qQ4LQ390sGTrGOAaYU7ti6/iWJ0speRJxAPGkPXfWi7xP0I7GZjFbbMIPBhRK2CWlsWHoRkGrqDXgaZLyGnMQw4mD+BExjZusoTSiG00NePxqDFGQ2eWxi6hAGV7nnM9VJAuLxoHJohbL+NDjI6G8Xizz6oKsxCpasoRp9OQHp9rHegrXiOn8SgWuI4pYur6chSwxDnoJ7yDR3jxu8hAP9xXiFOkRwxwHHqQ8842u/JfDfMLTZkZ7fQlFCOcgKe0fYn1OWz4uavADAr7kQ+P+fzb4uoLCiC+cVIlxz43IyhXSIxoQ3+jUY4jy5jAzchLxD2MQDehPGrYilvPYKpT5EJtC2UoHRLmAJQ6XnpKGRrc4f9t6XmTP/Mhdj6+il+VeV6jA5ShOcDWiA9/yBTkRK7nEOkoj9lGLjryM2I7oQhzH9KIvZUnGDqNG1lGI8Y7mArNOiPiN9BSlAYP4iIS24gtYFjuXOLxD8qhUOECUM1ljXPU7BveDKFSReTwKBmCz+Ud57I1wbUO9fPmzCR1OIY6Th8q8Y7E0I/fNfj5FFOUTlptDO0cZj9pVET9Tjo4W1qoaQ/xiKIV9L5RGB3guO8lpTV52GLB6lRI8JhtiFb3oEGKyplqtoGUIph0163nsWcj3nGMLj5hCZcQm1qHA/QwkLy9a9iXeQgwiE6IWGxB1DFaKh6xnNL9Tgu8Q47nKLsTTvI2ojZhBKj4x6JuUSiEyKiAnIxnb7ySlN1moziehCNOepXxDCyPRbnupazOiE6ksPiRCrKEBJ0Ol09bGOn2CWEk6zrIcUdRc61nWIrpRgRUkRazjEIpkEzIXFdDTo61IKvKT2eJ2DC/8+X8Q+1VLNi6EyMoYf57MEGJ3iwsZmM4PdKEKDViLaM1HRmy+ZTdwyqHUVU+0J7IXUY0dBmvyWc4/PjTbMfnEdCP3xQaGsYT7jm5r+rk3s9MYgo+49F8+vyRzDdD87Pm+yMklz6HmORs3jfe4BmxHZCY+OxB9QrqhFzzGrIvlvQOOZw2iLBMRg7w4N5GsrhCp79n/H4hLpCYv4ovQrX/Py8iX2k9Rd1IRUZ8Jhk6eZQ9vOU48zycB2xSs9rtWctrjAEgmPHhgtOM2ciF68IwhNHHb0+B+9v9AX2sBr5PXPlsD0ZMLiAOWuDa2yu8MxBmTzYiNHoWqOktVzymxZoxmIyKJfXvGqJudw9fsQjxFXfYgVtKLHMRD3LDpSsF22pONRkwyhPgEz3BeoSrLdWPpd9rqmm4Gs8mJhDmhormIQz92sQQxlgqI5hR1PxJgw5GkJ0tU/SaFvzbNAuNyez0PIhF3EftcwiC+4ICVU/Ybno8hwfJxnr2IpSRCjOAy+UlJP0bRnS6IQvz1H/uubf/PjBRLI3lRfM+xRG0bzWw8QrQ3CBMhHfYhDrAZcY95zGcwJZhHBsP+W61cvsipsbo8RDykHVmMHBsa8vxdKcLntrgqhlhF2dqd66lrDZ4jLr8h7rKMfIznUcjrD4jKIJ4I+bX5DOcbevAZTVgX4YJj2AHRnJam/EhjNGYM3urPcv5FVKIZ5TnF65QMlSg68RhRgVWGEMMMbUxOeMGVWrIkpSWvO5JfFFIHNCCjCbYKkpyMNowBKH/MLnOlX5uCbWaILkvu+cefHEAU4jtqOWD+2N14MJgVQ3zG7eCklUOKD1GcG14sD3BBHufT8pn57Q5xuuIn7iKy0MNECqnZwSHOu6ypeyjTrIdYxmy+cuIynI7foisF6UdmjponCTx+eQ4SnzdJRjYSsIRrhjxH0JRIRps1VOQTh2iJbIE1QwxkKkkYbK8+SSn60YZpQqxkocnK5iNuOcEgF0WKfK4gvMfKkIylkM2PSAJGsScnMRnYxBJysooBNGF7LBlcEPw62HDfYxAj+RdR3ciRV3iJPpREzKUn2RHv8yI7+R7RnT4mdRAlqMx25yyasoizXnir5rKtMhwjMR0tUR/lviBFDBS+TVOS0RdxnQOIUzSlGHcNFZ5goZ2qLb147IWoa4xClDIG8XumeyVgw//hFhRSA1Z0vmEiYg19rTL0E51CjOMLHOcuv1hGMc/1QmIA+xBdKUsVslGHOVGKlCCv+IN5HGQTvyPmWIQKFGwpKerY92FQRxthbuSh5d15mGCjfMIrv+KcVYueN9CxOxT8AoKytjvKM5wiK0cgtFgi5bVbpgq7YCEzYPHr85ZLZQeRhJkeH3K4WCuoM6YMVZ1iCjMBNVPBLTJSE95slt3KMsIn7UoCT7U6KFg9NMM5ajrKYD2mt7BXkILs5w8qRYhE2poFBPTZLkYiMnj8/pTHFKc+oro7uQgf8wOtbLDeNF1IAmMDvjD3epbzDCcNYjufI2oYtivkPn+554hN/dz9aIT4kr2MdBZhSaxBeomuZCAf4jyDECt4hnVho4mIoO9G1dcDg5/P9zQiH1moYnFZfMJUk7yEoXFv+7JSdLTscSifmZI0JV8h0rhOY7aVwU8SF/G0F7tm8RRrGODR4wqTqUsfppo7fomihhUjNaI7VGUXPV2qMcws975T7nNJgEiPSGMYRBRgUwyzV4iXCaTTazkUkjk+9FAUaIhm26mTIs4wwFiXarRz17TAeN0vzLVOJ7VpBPaSm5N2SRVCZvpE1EzdC8m1IxKaNxhGaYNZqx2UrTKIPcZw5xGeR+zjT8RdvkG0ogFb+YBjiDQctyuK5Bq36RvkbfHowQaq0ghxxPKwiLkPZjt9OO5S2SHkQnwQMu42/IZYzpsGfj/iEA+scFWbFzmNKE0ODthllrE68T2jUXIxmJIGUKr59zajMpkZZ9C3Say41IJr5qGCAS9CZQqxEzHVo0KARfNbE8B4RGnXEnp1QSRgOmIUN5jlq/g17rANEP25T0ZEI1JZFX8Pk0jGfMu/X6JLqIQ9g0+9Ivy8c0X1aIkoTD6qsJF/qYj4xvK/t4lv3FGQMLX3WuH7NuAiEcmchXySJw1gnTbL7ctUnrFJE5+zwZDmjRC2fY79iFfJHEqjAtq0exBuNrHafUBPOoaQQDR0HeBidvFcSPqiEJ5vFRJNvBgSRSawhDeYk0t8wkrLKGKEud383ZNJz1GrJBXgeQPrG0mLuEFvc9RfkNoYo1Sh5dfRSp/lzdRrGK9QyLKP7KHC7rrATEoywjVcA5gfteqXhdLLxVSnPBkcTxfynOy8OZUfWcagULEygKcPXD8SPWDvscc/GxCa3enGq4hjLGMbojP3QnlfJ1aRjD+8einGMY93EYcYSCJG8Q1iA+X4iSyIqcY4pUSM5hwlHLRPMNybU0Z8N2MwlQxd5yMdYgS9OYdozA7EGSojfich8W09JuKOUdoBewNvsNywfAwCv2gs4vO87UGrhIGQnV74VojbqcRSzpATcZ90iAlU5H3ERJazkPUURTQmEeKSre9W7lHaI8YzhRNmOzeIa0F0CCKuef+5pDRmUNQWb7Obx5btbWMgH1tGhQsKu3GGUYhJ7KYC4yxWdEfMs1rBACtojY7q+XiZPuxFvM6/9pmAY/jSUd3fsSziF1pQkoKIuZxjDetduBO2mmDJ7ENUZiRiLKkNlVQzY69rS2uu6Zue5FlEn6gK8V3a8xQSX9EdMYBGLEUsYgTiCOmthvbAhiOD19TWWDy4xQqKGKWekt99TJuac6rLAvYSjws0Y6bZSnESUxPRj5cQ3ZwKqcVOViFeMzT4O+Iaz1KS1oip1DBuMSMij7tcuQV2RjzimkH24U7PxXQYlGYy4gpZEAs5aRFkGoqs/GLuriqERnuyRYWIFj8hZ8hmaq1RiNossDQ1QAMrOWfL6HJIrnjUPj8GMY8/jdvLgfibU9ziJGkZZhB5MeIsv1Ia8RlxouZ+M/8iA0vXEANIazY6iEamX4kWTnz0Hze9lX6WPl9lDq35SFRgPGKB9wPJu69EJl73URYZScO/jCa5IaoP+d0rsu/xW+gMDY0au2Yxu39I0vg0u8hoBesGzKafM4DBoH7OMCpR3PDAe1y0aPE6Ii31ohZZULd4zGbaIcq7FCOIB4V8eQ4lrzFe4ppxVGd4ixzhwki/UMdARGnzj9VsliESk4DXLGWVYYI3uWrupyvf+Tm2spFGpgkXyUnFOgtTs/jL+0ASU9BlbpmNNG8UuoENDsR284oN5RErvSxDZDHW+iVqU8CUKfkNNpXhdQPaNWjHKWM6S5GOp0lhJbTgKBYg7e9cyB4+ZrMJMcaYtfYOUZ/0Pp1oF1UI8SWnvYiqkAZZ7GI/88jKu9QOFVe3Gs3ZjzSh9x9kn9P1Ii9dOM5gyzLKUsbY38UsM31hMhYzl0OId+hkutZPvbr9IqIFRwy6JbTpmxokSzFfepy/Q306V1zgnDGk6W5sz84wAx3PMqaSnqlRGt+AcKgS+qswAjb7oggg8AUyWWyISDHO0Akxg3ZMRqQjFwNczF2C4T7gtclOTTtbGTZabjnQ3GN7uiA2ctSI9c3mja66PCakLg1G4wWm0JSCvMwbfIgYS0vELpeYiZx0pAoFbfbnIVrRD1HVnskbut1M/yd4HSUbF+nPDsQOmlKQmt69UZRtZldz+BHxArNZi9hJesROanKOjLTnPcv7w0yguMFAJvC5MwTNvVi/xIy9sDn0HohCDspETcpzJhiAOVEwNGg7eJ0yXvGJTzcrW/c2mVIh/uY+pcxBxRRN0xvtEBFEDSUZJ+nlyK0alS3322HERCvetwBbk1q8zwVEASueTDJMudbojpQM9zYJUZBzzHLEkickj4y4xw1MMbI3BsuKR5TjEO0D0CyGMwvxNUN5zETEOwzzD3zJ60aL3TDs/CViBNd5111WX5LSkxGspxsDPW9rFjX/q/3ROtcKfIRoFsUVhgNwIi+UP0srv+l/Q2nQQYPe65nnzXJiF+MQXZlqTSCN/w8x148tMZJa8ay3IeSjlunFFxlS/tuy+G9NxHDC7GBGlGyhNKsMSWYKPT/E0ps6DDUOJzn1OEZul7JEls5axvCzp0uNLfGpx2xaG4w5SUtfMF1NXfgsXWnKwJBGcCBjiG9oM4DnDxE1uI5IR1++RyzzqqNRQNENil3Y4URE9NEzpBgLauxzHLNNpgsfIIrzAmIPDwx/T/ShvWES2I8sh/vB605jXS161ow+AEybEXd5hiOIT8iH2MUWVpA1CnB/6PqBKYYMX/Kk7jAPorrPviAtL9tyifQR3otEgXzERSRntpcPvnbRcezjWxc/xxCa91iMuEk6RDumm5vMjVjPizZMcaMspzzzWEt1XkSGGgKYfZ/MdHWAG89d7rqorqOS9ELEoQWH+ZWGrGI9aQxIBXLqBnTgRCxnPJ97/GiNtVcQlRmDZCs+M5uJw1xvSQyAyGhLJUf9ZxjGI0Ywz/D4LYpxB5GS5MyxtoZptmILODr8mH8pHkKWkaGozjZGIfYbSfIWB7hOHx5Sn/6UsGLKbK7QxhLhVFQ38nyYLaPdsVJ3cdzo0b18ySHEk6Q1R7ko3LEa0VckZBMl3SUdQpyhNr2oSzbEZSazmbk0RnTxXG4lN72m+ALiCSohkrOL48bInrcByoQoQW3qUN8rTuImP1CXPKRgM/0Qq5mK+Jxrvo1ChMQYEVIbiiZWXj0SJd3bjkhrmOFJRE2vXscU+1KFXGktxAmSiQl8xArjfWogmrtKNAbRpaQKe4xJGe8FswzWqvYL4msTRjTzCmOkFlyLgsThX9tHIi7ryY64Sh76eI1wMOJHCtAw5I9yIebTnw8RKezTNUO3vI77zEas5CS5Qg09SUKVjO9cGHnJmnoCncEef3d8UYQTiD1WX2mJKEtiM5JP6W7edxZnecbRYX+G8Lwxw0UNBDU0snsmCRlqFdphxsEGLrEyf5IV0T8koVhKbQp6JjqNrg5w8tssXzJ7qBXKWGqTyiuZAW2fx0n9VOTnRwM/u1wfXNk92AHzbmNozGEkJpmr2coM0/HucTIxpedQopSxhnPIy2zKcA/xFctDyuD2iN9t5RVGlKQzubwytClq5X9KdsR+ipgH/ycUzkbT03O9IAs8E3KfW8jhnWhySc9xD6pJGWJNHB8h2hgNd8JwxkpG2pLaHDT7BV9fOuri8oU69H5ArOUWYhxdbf0+xwJzdPFjObS1XlGexipWe5NlY6q4rEYupxRnjW94lbgWoCbQAlGYt7hiDu88Yg81mIHIZu74hrON56MapcTPIbebMcRKFiCexZOhUdUtRbDRx3RHLA/13SaxuT+G6Ms2U4+tccOazgpyGtXV27Q/KS0HE+vYQ0H2IIZwgqTM5xGvhmr16XnTmKVtjOZtTjiXlB+RwBdJZq/lJjWotJOB5CAvHRCtuW0zfdb4nwNMI1FoFxtRmtIMdre6MtREI8Q/gZH15AhiAXsRL/CvmVRPa3UbZBrSluxln9V2O5g/7ckoxEB2IGaxmPfIYgKUSDJ6wiBHI0bxMmIVzamAWOBMUYlQMXOQKQoWmWYsNpjtj2jAA8R9wyNNGYuo6ZrmIyaOn8dUfotq+PqDY7S2SLDZQmd8GTff0wnjk1yiMKIc2V02mYF2iE8oSVuuUwzxB51ZxUEOmOn/Q2oLovet5BDMW1GKu7DpPt2oadzidKrwdWjnqYAlrutMRCnqUNPgTzpKU4cvEf+EQlsEVv3FdQtwD/gN8SMv0RlRnLohQcxgJ8neM2DWOBiGmNPdsuJ2HERaOiN+JZ3PdV7v2eqGmGbra48T0o8Rq+jKXHOb/TylamdJjZjFfcQOlhqo7oJoY1F5RBQV144qUb3poiZdLQCv8h62Bk565jPckdFh/NOUpg3LLfht8BQ5B994dpgN8bPoySQTNT7mm5D3DbxmPcNbI0zdXTa0V09q43qqc4MCiNG0QgygPCIzC/kV8RI1WIwowC/8zmhEUlMZbzfXO9cHsnyotz/SvfKY51yPssbFc6ISrSjHm4jUZifpEa2oSDYjSvox3UFPVq9D5GYK7QypLOXLSNtcYKBXvE25FO0RQ0jMfkRCHlkpIxHHbeVWR2R02dw6eiP+sOFpYonTB/RCnGAb4jpnDWFu5h/y0pyhiMFMRLSwkiVui31NFXKBtnxABxIR33tMYlKhhfzJD6RlmJOqbZmGmBNKj2Mf+6jDQ15FJGcMC1GA/oowPEpnOZsaLEM0ctS8jHaIilZ9r0Vq9vAMO7jEAbvYd13VOdP7flb5YM13SmRxFOsYCV3RR5aoXCHSzbAVMZbqiMW0ZYELJWKOmVFBsaTL+j4OdZ7tt8RsJrspjMRV7popf08txNM05gYLEN0d0h6gtMXe9t7vk8gYtxNUo5ODz7bO8p31dfeUYcTsUaXW+EaX9raVn4Ltxj9siWrDbshKw/KB02yJmOMq85XOLuVGVOcCufmUn8lCVSogdtCVqpwN2VcP//cSIk104SFS2N7NSks8MyPmOM31m6dL5f+vgSWI+muc14+PGHbog/iYLmRmHw1ogXhEc4Oxy/4PoArvQnCb/KxB7A9RXKX5lGqI6XQlI8dCmgVC9OtQvvK9ygJgPInt1A0wjkjAfcTLiD+YymFKIjoRnw02Rxts5l5ATHNvfd/bmmNkKSNDQPc3F8PG7gMTmTmH+IrKtCWHffY4FRELyMtpQ/3iCz6lmMt0VyByco/HDDHSJKgulmO3g54bdGUseShooGqx7zswFpGAJ3g+pCrtxGU6BRWWLqHqj/4P/BAPHH3HNXpxFe+HdnI5RT/Ez/yNuEMh2zwjMrPZjaiYb2VJGZv0oWlR9ocKLvdCaoOuzKAadRF/uAQi0q7dnEmhLXIWkZLPeIW5/MAZqiA68yE1PcKI3rxiRFltt604dAh2fGvLUIuqP1HUWow6WESIpJXfWT4+HPEVZWhquq/UVKJJqKKkUPv6E44W6iCedUzWyaDtePf7w61fpBWvcZ333QqC69tvdYdnYjnSXaTgPO8h7lHVwuQkhvKT+adGVEFk4EfiUzWq1y1Y0K0YEQEhfRDTTZZSkiJ04lVj6W74NkvZnalNwHpENQhVaIvwp8mj/usVZoQ2Owgfhz1g1UXEc8XxX8YW5uUS4jN6u37lC8a6ww0caXvEk/yCGE5KT78G0pihlOMQj2mDOMITDEfcYDoXDN94ZShnaEeohIhfqcheCiOSsp2NBnm2WY3mR0QVinGc730t/st3lEE8iOoyKRll0vW5jjhCihDttpZViI1kJx1xEY9Yg4jPJcvomsZqo7tmsxhpmz6B2O456QyzoVFsYySiGCtDqqOciLysZmJojyohUYLxLl3pGXrpA0NcVUMVO/E8vZnEddIj3uU0eXgm1u4CE7hBFW+c/RSxmyG8b3yTXDI9BVE3tHD+CO0SFHiGvCE43JC3Kc45fqc0B+htkxHX2ivOhz5XmdZkR9z06uITzIvaXyrSHVcpGIC2kcwYRe3tJbL9p75eMCpUlSAZM6mJaGrChqUssS96knKU8J7ytSQhAz+QkG9CqpAnfL+gsLg1JnaU4Q7iC8pzgKGI+rRANKOJ8ca5o67tri3YNy2cnzK14lrE6KiWwIDC2RiwRjE8WyBTToO4Qm1+BdrxJmI5aUkSa7uaHx3ybgm13O1HZOFpR5R1jA163oufc01WHSDFd9nOQMTbLEVkM2bpvyLrcFvt/SiEsNVIsnLOVdfyItjXvjnPHTpwlbYcskS5COts2PcyOTIeqVgcpcftwpfkcqcXrLcjXrP/AVGWQRTwgtZbzDWq5F0PNI0Nt1flodFu1ejIHCYhEtKEJJY5ZgltuxIhuy7Fos63kdnY3kFspQLiM5+SJnYV1RCjKUFRQw5TEbUpZvZVHPEbm224GkUK6OGvGUUWc1rfM4B/rNtjP+JzinLaM7GttOFf5vIefVx0+jYf0tV4nKfJylJEQX5FFKCVz+rn5knm0QZxiHcQ65jvW2mEjxe9rfs2f1vGV8fySPEScxGvkduLuv9SmEeI5BynOu08bd5CWcQDcpnzvcMAxBSaBctWIZ/8TahUucpcz4ec9tLmB5Q2Ix7GSFNtX6R3qHG9OaIGhQi6EQfRlKJUYaOlom1NKnOBeQ5GmljVoB+nTfCW0Gm1mB0fhjGTrJQkLU+5Fa7ntDVtJzXq+2GoJS8iy+jkkr2hiF+5zk1EOe6zkI7sQRF9Tl1EY15FfO47QXdBtKQGeIPqPc/gc9PJEMIYRC+nPw7zLCIZqzhJOxqx3SDR0WgqElHP+xAVpQ1Z5zPanCKIvYYpB7rqI4IV9vIGd+hLHwYgenDR1nwCxPehPoWCVrTN5NKvt3kvkvnIWxjyO8U8xFLeLjRDHKIWzyDe82bnNdxjKS9axa404g1eRQxnrWUI/azksdV8cQSrtzQB/EhLjf7iI8Q89nOJBZxhCIeJY6rz5hRG1OBPHiHacZfDXOAJI+tXuzb9ke1w1NmEuBfNktYzBNGGrFx38cSXsTaDLx0ZgB6ctvLGw1Dz8QEOOwE9hubmmuJ4C11bww+r+RnxNTfJxzxG0t28RQHHFf9wBTGFopb5PRHKPO7TkGG047DBsBq2HBdbSBzk/cwK7ScROLklBpNyc9IRwwziIuZRxeNbG87aef9kklF86RGJqRUAIZGD7PT2cFbRUXMCSy3/Njf2Dcli+WexwtxgGVZzzaHzAEZaZ0h9tiJKk5QPDB1m5YD1fC2hkG+E3Idc9voCjwz3TaD5yIRvAz2KJyWvS+UWera4ijGs8rykp7EQH9ig7nYGoaoRJNUoFUTlilTnlo1mDiqz2n3oHStBVeVzRnKV44htHLSsYSHiBw5TAlGJBqxD5OddG7jB1Kalc/tpHREcom5UoDtLXSe1x1EA0Tu07U0exHw+5lfzJBs4iRhMNXqRxPUijzyHaOJQLtivrheDnel8CvE3wxEVgOaIRQFl1Q0xmex+Gdm4i2jHEPZ5BnaI6J0+L9jKWmsXPsGQ+GhShhRHs/kEMc7qfQFef5WsDEEcpiAdzGYK+Jba8o25apPbHXIwhOu8sieeZzJzvJAbOdLF2rlsLOK8Kw7EJF6gAmK69TJkCgoTCaM+fBlRlm8phBjpjN3S/+Oz4zOFanZbxY2wbMQCb2Ws7D4kDw0NxcV459Mh3Z5Y55urBEizh22V8bctkmcZiGhB1ZDOXLzGCt5ATKQ3DUhIay6RGvGQlcYx/Olg6nJU71qQZsUJBEzno/K3P6nhezP0oDWioO/CViWE1OcjUvIOYrzRGTMMx01xg45A7VssQtyiJCuZyy2O8TtL6MbTvstTJOnajqhPCQog/iZlVKJT9z9FcvFNKGM5xxREIpqYZW5CbHLS5lgIIeSK9BGIJe5hS1lAHG6QphbjmYVoxmr2gmPro36i3qbwuWFSxCU+m7n4i7g0YS/jEN/xsVVnvuYGI8lNJsSvNEOMo4Z9d0I/769R+rL1FrIq0pY5lCY3YqDVen7mBsfIQ3zjH2dS1wj3t0N6gcDT1YmS/aQnBVmRWMErVEE04JTl4kEJoh7Z+ZObdOFdzlpx4VIoHyxrVMqw0DYZt70r66QrAxK6o+vId7YX9FVSsND3DGllcSAe4i3aWt7wrVNwxTlnGcdixHR+JCX7OU3mkALgdURiSlgR/iE/cxVxkbcQBUlHeUQHCjkjuNUUSZLv1iHusMu97xuxWhoKkoetLlaaxvs0QaTlvVBv6E1Os4gSrLSV18lzsyysp631pnyBuEM5VpuC5HgUSoskRMvdqHdRyP56zLds41sq0s5FtoVs8Tzt3GRMY+Wx/5TJq5ptreISjxCFaSvGs4/vEIPZFerXLsZpq/tMcwcY9Ife4BjJERtsX5boDex7IjqzmHdDXZ07aI6owx80RTTnsN3w14bmBtkqLRDa7Cbg/3IZ7789aqfBSKlsC3GNlr2AyOSb6R/iLmKMWUdrVz/fNZsNy7ILBt4wPX1I5JKTx8blLw/tDZsxtAtMhJnN4xq/lIjXQ8x+WU47cX3Ebq0UD6kecrjPR+0vFcCSLfbtjSjjdclG5vXf5FneROzhY9Ii0tvM3mAMojj1QzqhIIft69bwgZOpjRzd1EccomhQ91lKdcNI8UlsJas+lmGLXbzLOEQqqiJqkxzxwFtkgswxQ9RGiQLeYg3ZEQ2pbRClEuvowVm7sZsmsSpBVuYgvqefs0HfItZTP8QIPmAsD40BiIcYzIcMJBHiF+Ib7xCmbEoxjpXUYG9UoS1L1IY+K3iFMTE38R2TmGUFkFlOSPfg/dAWVHujjHE6jRhJVaPQt4X2JJtls7OVc76N3h0mIbLyDF8jCvlQPbY06VnDar/zjfWeHA39etUAatCbb2lBDpqykmGIQ3zGWMR8fqQ9wxCjWEQpstOd8yRmG/vpgPiMfTSiu+GANyxiTWUf26mrWF05P3GXT5iO2M1OwwVXOMlAxB3+QtzgGie5zzLjCH92dDCBJHyBGMlAFpDOm2ADRXqeEKu4HjGc7YjTLAkNXn7K0yi0h1h3xDZzkDVj7RaczrKFvoj+FHLEiom0utCQfxCDTFk2z7UDvXid9IgdrAqiQAkrKbQyFPZcaA+v3z2j24nYR08ucMB/HaKg9QYGafThWFXfGIpzVihMPms39B29Da+LHUww8v2ga5ffc83gGpPRLTbCph/iK15hG51Y4VzydM7Ygpnuv45WxXsYz3E9JLhoQTPECMpE0uHdsbBWawebF7zgODoWbR1DcDyiKh3MMaagFXcM5iaJxe4tYA8iN7+TAfEdA7nITMs/SrHAhA3feAW5PS1CXmA7KbiM+NOKJEn40tJasZ3ZRpn87tnB17TzxTvNA/UJa7K5QHe+oXMwANmZzCuIM7zLDgoba3M1tNdbjOFltUzvYtSPIIl0oZ9D+zKECYv4/M/2NLUlLRDPMZWnDUK3MrKsC1vIF6tzWfQJbdUV5B1/8zypQxukZoq1FctQRAH3/WKZsQoHKUgGSiBmsSFgOAPd3xt0tbWT3pzSm5xB3GS8raoXKUvCWD+eVIurxiE/w2tkISXiJvG4TiXHDhMMKeSPasDuycfGJR214NUoqnvtLeYxCFEztNvcWP9Br5idymL8+zGnbMUXvk+2uMMDqyp+aSXg9HyH+JshASiSaTj6UYd6iFactOj8Es+HGKIwG/cGryM+YxKVHO4sMvlZ5dAQNSQec+hlYe85rtDdeMUxoXOJLSSnNC/zIpVDPYQRxxiHWoiUrvSLYNX3KcUQXiINaQ0Ki1/IbnEjv6vDznhHUx/KkI6WJAjJbP8KSxMK8oRBh9fY5Ch7amhn7iD7epGD1PO5GcNaWjIA8RPFET/ZEGS2QFjMlEdVQztFxT76RskjlsYSW0z39oifjONZzUZEBV6kDrCbVIgefG368daeWK+K+paMJDdW4w6HKUgNRKJIC2R2HnDTb1pRtcIvHLjcMXvJaqWMfiHvUIAEiKoU4N3/nOesAZg2iLR0tb69QCj1KdPJx2ynPmJvs906lNPfR3zBs9R1LeJuxAw6hjaETEJs1UvBWOrQCLv9XLAEKvioV4n125NyWYsYak6uLPNITn9EQhazg2I8Q3JOsou6iBpc5botm+6U5SGiFU1oa0xzTrqEJAuR1HcrDRHJeJk1lACzng8tsGZlGWKGbbfX3zLM4ogj5jm2Uc41A0sMfYwASlLJco8iHGSLue3TbLHIUyBSHe5MLcQBjrMp1F5+08Vo/QhvqZyKdYgnGWT6zIk2aJt4m2KIoTxGFOIWG2nNAw5YcJ2I2EdixE0mu3LzY3byggn0tjmb0MEad2Km40XEPlohWjKVTvyNKEk+GlsPwGRECqpT1X9NMog7faP0Y7tj/SRb/YgTrBzaQTASVjqx1qLsKRZYN0d9SiIq8xeJeEwGWx4jEB9T2DdNu4Z4m4OWeS/0/OtDpvI00Zt5RxDCx2xGxOFp/kQcJwnn6MdjKpLfE6eJRpJ3s06gg2SiMB+RhwXmTlPQhTJm8A0Qn7AnVBf+kF/oZHc7BjEoaJ+PdPONRIzheUspKjgWbOZOsJ1xM5+GfmO2kVUKxAEquXCqMCIx06Pkbo1YgdjnRYozTsOl4CtzecfJxljOkJzbrLM8oZ5vhBs+UjKBYUzhX8T9kM/pRF7EYWYZIfZ5yAr6hn6Trh/5A+8XswPIt0xGnOQNxEkbv0b25S9YtjWDraHyVh6SW303MZetLrfPqK+RZuDbDQv2oD0iNR0QF10mNZH05OANcvFWlOPswFOx2nGDjp+5iJ/Yyd/MZjNFrDJwyyjOyWzkNYoh6nHVSvc1ecweziGme2NmR57gXYoFVxGps01mPjMpTWIecoBlRpD+HLU9+jIS/R8v3dkl1uKkeY5ibOJ1ShjhsYLJ9Av9+FLqqB+/CxbIMhqRy7xA3hABu58mbCUpS3iPgsZVnuYUlRF/2K3X9Um8QQNECTaQhoZMoHqIbM0bUr99SyKz7TryPfnfYbehtt6I9y2GfkU2klqUOM9ERnA7lPQ0DW1UmMvEk4WMhGwAiHRMNVKkJJdZSDyy8yar2cQXiK50Z61940LEFh546WsJbVwgLYq48H0C1agSWoizQrWBJiHKPbPVtzaYu7vB577TZTnbrfpgjD6ghuuwKvCCDcSnoR8kKmygZyYNEeM5x0zEZyxgIe3cq27ztrQOngOM4GdneV/hNtkR9yzjPBml5RfL2UQSxBmzj6EUY0+sn2opTE96meB1rrH8NxBxyU4i6odQwyMW8YDH/I5oxRymeJViLmMjv4sTsLsLWYw4xV7v8BBFeSqkxwr/NkMMdhzPAe4gVnGTrS5ZSoXIRSfPwjpbPnHUMre7Hnem+QxPR2whPk2jdi3ZjlgbKozWdp3v+SgdwBXECQpY+0xRa8KLXqqjqEVfFtLdJDevBZ3m4u8Qy7PPbjQ9s303lsy+i0yEBXjHvOtIxMhQlaA0fyEGu97jAaIZs3yRPE8bE1MUM1S5hj/4iS68yixLZTZZEW0KdUKVgmaWoE0kiw3dMQobUl1kPwU9ln70taEdzG+IkbY4dlCXC4hFnGW0iXDSIUYxBwU8cPCbzivozHw+pxvJLH1MhmjMVEst/rHZfxjV3PiPFZ5O8Ih/Sc1PzgEEewIf8CT1ulcSp7LbvHe3kHRVvE4HL7/0d31Sak+AGpgE91XfuzjY9O0nb6SOqNIqIPq4anG4I1rxJhe5EMM0i8HkRlRjsCWb90hlbz6NGMoZclDFvGduZwpKhVKVHQYr3/fuwGHOFO0hk+0WvYEvjRNKb77mif8AoiXutHp7n2E/sjOAKYhWHKEv+XiAuMlnFOY9/43hmt5T0gjRk6OGNJKyhEeGT7ZG/UTfjMgA7KEG+XnHwlTGkNbzB8Q2dhosmuQC6mHOF8/lL16jEP1d5Pq+MQVPURAx0lzrQtN3vmSJ00VSMBPxDwcMOWYzju9J2lGVxN4JMIMHiITkQVQ1quSvkL9PQRbEZg/OufnepfHJCe+JsRhxlASIxXQ0H/IzCf8HdiT4ppG/6/kAAAAASUVORK5CYII=) repeat;background-size:128px}
+#capa.abrindo .textura{opacity:0;transition:opacity .6s}
+
+/* textos */
+.capa-topo{position:absolute;left:0;right:0;top:13%;z-index:8;text-align:center;transition:opacity .6s,transform .8s}
+#capa.abrindo .capa-topo{opacity:0;transform:translateY(-30px)}
+.prata{background:linear-gradient(100deg,#7d8697 0%,#d9dee7 14%,#ffffff 22%,#a7b0bf 32%,#eef1f6 46%,#ffffff 50%,#8d96a7 62%,#e3e7ee 78%,#ffffff 84%,#8a93a4 100%);
+ background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:reluz 5s linear infinite}
+@keyframes reluz{from{background-position:100% 0}to{background-position:-160% 0}}
+.capa-nome2{font-family:Nyc,cursive;font-size:clamp(46px,14vw,74px);line-height:1.15;padding:0 10px;
+ filter:drop-shadow(0 0 1px rgba(255,255,255,.9)) drop-shadow(0 0 10px rgba(220,230,255,.45)) drop-shadow(0 3px 3px rgba(0,0,0,.7))}
+.capa-15{font-family:Poiret,sans-serif;font-weight:600;font-size:clamp(16px,4.4vw,20px);letter-spacing:.55em;margin:8px 0 0 .55em;
+ filter:brightness(1.25) drop-shadow(0 0 6px rgba(230,236,255,.75)) drop-shadow(0 2px 2px rgba(0,0,0,.7))}
+.ornato{display:block;margin:10px auto 0;width:min(56%,240px);filter:drop-shadow(0 0 4px rgba(230,236,255,.8))}
+.lua2{position:absolute;top:5%;right:9%;z-index:8;width:clamp(54px,15vw,80px);filter:drop-shadow(0 0 10px rgba(230,236,255,.75)) drop-shadow(0 0 28px rgba(160,185,255,.45));
+ animation:luaFlut 6s ease-in-out infinite;transition:opacity .6s}
+@keyframes luaFlut{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-6px) rotate(2deg)}}
+#capa.abrindo .lua2{opacity:0}
+.toque{position:absolute;left:0;right:0;bottom:7%;z-index:8;text-align:center;font-family:LoraI,serif;font-size:clamp(18px,5vw,22px);letter-spacing:.04em;
+ animation:respiraTxt 2.4s ease-in-out infinite;transition:opacity .4s}
+.toque small{display:block;font-family:Poiret,sans-serif;font-style:normal;font-size:11px;letter-spacing:.4em;margin-top:6px;color:#c9d2e6;-webkit-text-fill-color:#c9d2e6}
+@keyframes respiraTxt{0%,100%{opacity:.65}50%{opacity:1}}
+#capa.abrindo .toque{opacity:0;animation:none}
+
+/* fita de cetim */
+.fita{position:absolute;top:56%;z-index:6;width:50%;height:auto;transform:translateY(-50%);transition:transform 1s cubic-bezier(.55,0,.3,1) .35s,opacity .8s ease .5s;
+ filter:drop-shadow(0 8px 10px rgba(0,0,0,.55))}
+.fita.e{left:0}
+.fita.d{right:0;transform:translateY(-50%) scaleX(-1)}
+#capa.abrindo .fita.e{transform:translateY(-50%) translateX(-115%)}
+#capa.abrindo .fita.d{transform:translateY(-50%) scaleX(-1) translateX(-115%)}
+
+/* lacre */
+.lacre{position:absolute;left:50%;top:56%;z-index:7;width:clamp(150px,42vw,200px);aspect-ratio:1;transform:translate(-50%,-50%);cursor:pointer;
+ border:0;padding:0;background:none;-webkit-tap-highlight-color:transparent;transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.lacre:hover{transform:translate(-50%,-50%) scale(1.04)}
+.lacre svg{width:100%;height:100%;display:block;filter:drop-shadow(0 10px 14px rgba(0,0,0,.6)) drop-shadow(0 0 18px rgba(220,230,255,.35))}
+.lacre::before{content:"";position:absolute;inset:-14%;border-radius:50%;border:1.5px solid rgba(235,240,255,.7);animation:onda 2.4s ease-out infinite}
+.lacre::after{content:"";position:absolute;inset:-14%;border-radius:50%;border:1.5px solid rgba(235,240,255,.5);animation:onda 2.4s ease-out 1.2s infinite}
+@keyframes onda{0%{transform:scale(.75);opacity:.9}100%{transform:scale(1.35);opacity:0}}
+#capa.abrindo .lacre{transform:translate(-50%,-50%) scale(1.25) rotate(-12deg);opacity:0;transition:transform .5s ease,opacity .45s ease .1s}
+#capa.abrindo .lacre::before,#capa.abrindo .lacre::after{display:none}
+.clarao{position:absolute;inset:0;z-index:9;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 56%,rgba(255,255,255,.95) 0%,rgba(220,230,255,.5) 18%,transparent 55%)}
+#capa.abrindo .clarao{animation:clarao .9s ease-out}
+@keyframes clarao{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
+
+/* reflexos em cruz (estrela de brilho) */
+.reflexo{position:absolute;z-index:9;width:var(--s,60px);height:var(--s,60px);margin:calc(var(--s,60px)/-2) 0 0 calc(var(--s,60px)/-2);pointer-events:none;
+ animation:reflexo var(--d,3.2s) ease-in-out infinite;animation-delay:var(--a,0s)}
+.reflexo::before,.reflexo::after{content:"";position:absolute;left:50%;top:50%;border-radius:50%;
+ background:radial-gradient(ellipse at center,#fff 0%,rgba(255,255,255,.85) 12%,rgba(210,225,255,.25) 40%,transparent 70%)}
+.reflexo::before{width:100%;height:9%;transform:translate(-50%,-50%)}
+.reflexo::after{width:9%;height:100%;transform:translate(-50%,-50%)}
+@keyframes reflexo{0%,100%{opacity:0;transform:scale(.2) rotate(0deg)}45%,55%{opacity:1;transform:scale(1) rotate(45deg)}}
+#capa.abrindo .reflexo{display:none}
 
 /* ===== CONVITE ===== */
-main{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:44px 22px 30px}
+main{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:68px 22px 30px}
 #convite .rev{opacity:0;transform:translateY(18px)}
 #convite.mostra .rev{animation:sobe .8s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes sobe{to{opacity:1;transform:none}}
@@ -160,15 +199,6 @@ input::placeholder{color:rgba(230,236,248,.4)}
  background:#fff;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);filter:drop-shadow(0 0 4px #cfe0ff);
  animation:explode var(--d) cubic-bezier(.15,.7,.3,1) forwards}
 @keyframes explode{0%{transform:translate(0,0) scale(.3) rotate(0);opacity:1}80%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1) rotate(var(--r));opacity:0}}
-/* envelope: inclina com o toque, cartão cresce e vira o convite */
-.env{transition:transform .5s ease}
-.env:hover{transform:rotate(-2deg) scale(1.02)}
-.env.zoom{animation:none;transform:scale(1);transition:transform 1s cubic-bezier(.6,0,.3,1),opacity .9s ease .2s}
-.env.zoom .card{transform:translateY(-58%) scale(3.4);transition:transform 1s cubic-bezier(.6,0,.3,1)}
-.env.zoom .back,.env.zoom .front,.env.zoom .flap{opacity:0;transition:opacity .5s}
-.capa-txt{transition:opacity .5s,transform .5s}
-#capa.abrindo .capa-txt{opacity:0;transform:translateY(-10px)}
-#capa.abrindo .btn-abrir,#capa.abrindo .capa-dica{opacity:0;transform:translateY(10px);transition:.4s}
 /* título com brilho passando */
 .meus.gold,.capa-nome.gold{background-size:100% 220%;animation:brilho 4s ease-in-out infinite}
 @keyframes brilho{0%,100%{background-position:0 0}50%{background-position:0 100%}}
@@ -226,26 +256,146 @@ input::placeholder{color:rgba(230,236,248,.4)}
 .sheet.on .lista li:nth-child(2){animation-delay:.08s}.sheet.on .lista li:nth-child(3){animation-delay:.16s}
 .sheet.on .lista li:nth-child(4){animation-delay:.24s}.sheet.on .lista li:nth-child(5){animation-delay:.32s}.sheet.on .lista li:nth-child(6){animation-delay:.4s}
 
+/* botão de música */
+.som{position:fixed;top:14px;right:14px;z-index:19;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;
+ border:1.2px solid rgba(255,255,255,.7);background:rgba(10,29,99,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 0 14px rgba(207,222,255,.3)}
+.som svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.som .corta{display:none}
+.som.mudo .corta{display:block}.som.mudo{opacity:.7}
+.som:not(.mudo) svg{animation:danca 1.6s ease-in-out infinite}
+@keyframes danca{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg) translateY(-1px)}}
+
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body class="lock">
 <div id="sky" aria-hidden="true"></div>
 
-<!-- ===== CAPA: o convite chega fechado ===== -->
+<!-- ===== CAPA: envelope de luxo em prata ===== -->
 <section id="capa">
- <div class="capa-txt"><div class="capa-top">VOCÊ RECEBEU UM CONVITE</div>
- <div class="capa-nome gold glow">Letícia Maria</div></div>
- <div class="env" id="env" aria-hidden="true">
-  <div class="back"></div>
-  <div class="card"><div class="mini gold">15 anos</div><small>28 · 12</small></div>
-  <div class="front"></div>
-  <div class="flap"></div>
-  <div class="seal">L</div>
+ <canvas id="ceu" aria-hidden="true"></canvas>
+ <div class="envelope" id="envelope">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+   <defs>
+    <linearGradient id="linhaPrata" x1="0" y1="0" x2="1" y2="1">
+     <stop offset="0" stop-color="#6f7889"/><stop offset=".3" stop-color="#e9edf3"/><stop offset=".5" stop-color="#ffffff"/><stop offset=".7" stop-color="#c3cad6"/><stop offset="1" stop-color="#6f7889"/>
+    </linearGradient>
+    <linearGradient id="abaCima" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1438" stop-opacity=".55"/><stop offset="1" stop-color="#1b2a6b" stop-opacity=".42"/></linearGradient>
+    <linearGradient id="abaBaixo" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#050a26" stop-opacity=".6"/><stop offset="1" stop-color="#14215a" stop-opacity=".35"/></linearGradient>
+    <linearGradient id="abaLado" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#040820" stop-opacity=".55"/><stop offset="1" stop-color="#0e1a4d" stop-opacity=".2"/></linearGradient>
+    <linearGradient id="abaLadoD" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#040820" stop-opacity=".55"/><stop offset="1" stop-color="#0e1a4d" stop-opacity=".2"/></linearGradient>
+    <filter id="brilhoLinha" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation=".35" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+   </defs>
+  </svg>
+  <svg class="aba esq" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,30 50,56 0,84" fill="url(#abaLado)"/></svg>
+  <svg class="aba dir" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="100,30 50,56 100,84" fill="url(#abaLadoD)"/></svg>
+  <svg class="aba baixo" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,84 50,56 100,84 100,100 0,100" fill="url(#abaBaixo)"/>
+   <polyline points="0,84 50,56 100,84" fill="none" stroke="url(#linhaPrata)" stroke-width="1.3" vector-effect="non-scaling-stroke" filter="url(#brilhoLinha)"/></svg>
+  <svg class="aba cima" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,0 100,0 100,30 50,56 0,30" fill="url(#abaCima)"/>
+   <polyline points="0,30 50,56 100,30" fill="none" stroke="url(#linhaPrata)" stroke-width="1.6" vector-effect="non-scaling-stroke" filter="url(#brilhoLinha)"/></svg>
+  <div class="textura" aria-hidden="true"></div>
+
+  <svg class="lua2" viewBox="0 0 100 100" aria-hidden="true">
+   <defs>
+    <radialGradient id="luaG" cx="35%" cy="40%" r="75%"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#e3e8f0"/><stop offset=".8" stop-color="#a3acbc"/><stop offset="1" stop-color="#6d7688"/></radialGradient>
+    <mask id="luaM"><rect width="100" height="100" fill="#fff"/><circle cx="64" cy="38" r="38" fill="#000"/></mask>
+   </defs>
+   <circle cx="46" cy="52" r="40" fill="url(#luaG)" mask="url(#luaM)"/>
+  </svg>
+
+  <div class="capa-topo">
+   <div class="capa-nome2 prata">Letícia Maria</div>
+   <div class="capa-15 prata">15 ANOS</div>
+   <svg class="ornato" viewBox="-120 -10 240 20" aria-hidden="true"><defs><linearGradient id="orn" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".25" stop-color="#e6ebf3"/><stop offset=".75" stop-color="#e6ebf3"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+    <rect x="-120" y="-.6" width="240" height="1.2" fill="url(#orn)"/><path d="M0 -9 L2 -2 L9 0 L2 2 L0 9 L-2 2 L-9 0 L-2 -2Z" fill="#fff"/><circle cx="-22" r="1.6" fill="#e6ebf3"/><circle cx="22" r="1.6" fill="#e6ebf3"/></svg>
+  </div>
+
+  <svg class="fita e" viewBox="0 0 280 200" aria-hidden="true">
+   <defs>
+    <linearGradient id="cetim" x1="0" y1="0" x2="0" y2="1">
+     <stop offset="0" stop-color="#2f3644"/><stop offset=".1" stop-color="#9aa3b2"/><stop offset=".24" stop-color="#ffffff"/><stop offset=".36" stop-color="#c9d0db"/><stop offset=".48" stop-color="#6e7788"/><stop offset=".6" stop-color="#e9edf3"/><stop offset=".72" stop-color="#ffffff"/><stop offset=".86" stop-color="#8b94a5"/><stop offset="1" stop-color="#2b323f"/>
+    </linearGradient>
+    <linearGradient id="cetimLaco" x1="0" y1="0" x2="1" y2="1">
+     <stop offset="0" stop-color="#4a5262"/><stop offset=".25" stop-color="#dfe4ec"/><stop offset=".45" stop-color="#ffffff"/><stop offset=".62" stop-color="#8f98a8"/><stop offset=".8" stop-color="#d7dce5"/><stop offset="1" stop-color="#454d5c"/>
+    </linearGradient>
+    <linearGradient id="reflexoFita" x1="0" x2="1">
+     <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+     <animateTransform attributeName="gradientTransform" type="translate" values="-1 0;1.4 0;1.4 0" keyTimes="0;.6;1" dur="4.5s" repeatCount="indefinite"/>
+    </linearGradient>
+   </defs>
+   <g transform="translate(0,18)">
+   <path d="M0 58 C70 50 150 64 280 56 L280 104 C150 112 70 98 0 106Z" fill="url(#cetim)"/>
+   <path d="M0 58 C70 50 150 64 280 56 L280 104 C150 112 70 98 0 106Z" fill="url(#reflexoFita)" style="mix-blend-mode:screen"/>
+   <path d="M0 63 C70 55 150 69 280 61" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="1"/>
+   <path d="M0 101 C70 93 150 107 280 99" fill="none" stroke="#2e3542" stroke-opacity=".35" stroke-width="1"/>
+   <path d="M280 80 C226 18 120 -4 76 26 C52 44 74 86 280 84Z" fill="url(#cetimLaco)"/>
+   <path d="M280 81 C222 50 150 30 108 40" fill="none" stroke="#2b3240" stroke-opacity=".4" stroke-width="2.5"/>
+   <path d="M86 36 C120 22 190 30 250 66" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.6"/>
+   <path d="M280 82 C224 142 128 166 82 136 C58 118 84 80 280 82Z" fill="url(#cetimLaco)" opacity=".95"/>
+   <path d="M280 83 C220 112 150 130 112 124" fill="none" stroke="#2b3240" stroke-opacity=".4" stroke-width="2.5"/>
+   <path d="M92 128 C130 142 200 128 254 98" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="1.4"/>
+   </g>
+  </svg>
+  <svg class="fita d" viewBox="0 0 280 200" aria-hidden="true">
+   <g transform="translate(0,18)">
+   <path d="M0 58 C70 50 150 64 280 56 L280 104 C150 112 70 98 0 106Z" fill="url(#cetim)"/>
+   <path d="M0 58 C70 50 150 64 280 56 L280 104 C150 112 70 98 0 106Z" fill="url(#reflexoFita)" style="mix-blend-mode:screen"/>
+   <path d="M0 63 C70 55 150 69 280 61" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="1"/>
+   <path d="M0 101 C70 93 150 107 280 99" fill="none" stroke="#2e3542" stroke-opacity=".35" stroke-width="1"/>
+   <path d="M280 80 C226 18 120 -4 76 26 C52 44 74 86 280 84Z" fill="url(#cetimLaco)"/>
+   <path d="M280 81 C222 50 150 30 108 40" fill="none" stroke="#2b3240" stroke-opacity=".4" stroke-width="2.5"/>
+   <path d="M86 36 C120 22 190 30 250 66" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.6"/>
+   <path d="M280 82 C224 142 128 166 82 136 C58 118 84 80 280 82Z" fill="url(#cetimLaco)" opacity=".95"/>
+   <path d="M280 83 C220 112 150 130 112 124" fill="none" stroke="#2b3240" stroke-opacity=".4" stroke-width="2.5"/>
+   <path d="M92 128 C130 142 200 128 254 98" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="1.4"/>
+   </g>
+  </svg>
+
+  <button class="lacre" id="abrir" type="button" aria-label="Abrir o convite">
+   <svg viewBox="0 0 200 200" aria-hidden="true">
+    <defs>
+     <radialGradient id="cera" cx="36%" cy="30%" r="80%"><stop offset="0" stop-color="#ffffff"/><stop offset=".22" stop-color="#e4e8ef"/><stop offset=".55" stop-color="#9da6b6"/><stop offset=".82" stop-color="#5d6677"/><stop offset="1" stop-color="#3a4250"/></radialGradient>
+     <radialGradient id="ceraMeio" cx="45%" cy="38%" r="70%"><stop offset="0" stop-color="#d9dee7"/><stop offset=".6" stop-color="#9aa3b3"/><stop offset="1" stop-color="#6b7485"/></radialGradient>
+     <linearGradient id="letra" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#eef1f6"/><stop offset=".55" stop-color="#9aa3b3"/><stop offset=".75" stop-color="#ffffff"/><stop offset="1" stop-color="#b8c0cd"/></linearGradient>
+     <filter id="bordaCera" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="11" xChannelSelector="R" yChannelSelector="G"/></filter>
+     <filter id="relevo" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="blur"/>
+      <feSpecularLighting in="blur" surfaceScale="5" specularConstant="1.1" specularExponent="22" lighting-color="#ffffff" result="spec"><fePointLight x="55" y="35" z="140"/></feSpecularLighting>
+      <feComposite in="spec" in2="SourceAlpha" operator="in" result="spec2"/>
+      <feComposite in="SourceGraphic" in2="spec2" operator="arithmetic" k1="0" k2="1" k3=".75" k4="0"/>
+     </filter>
+    </defs>
+    <g filter="url(#relevo)">
+     <circle cx="100" cy="100" r="86" fill="url(#cera)" filter="url(#bordaCera)"/>
+     <circle cx="100" cy="100" r="64" fill="url(#ceraMeio)"/>
+     <circle cx="100" cy="100" r="64" fill="none" stroke="#2f3644" stroke-opacity=".55" stroke-width="3.5"/>
+     <circle cx="100" cy="100" r="58.5" fill="none" stroke="#ffffff" stroke-opacity=".65" stroke-width="1.4"/>
+     <circle cx="100" cy="100" r="73" fill="none" stroke="#ffffff" stroke-opacity=".5" stroke-width="1.6" stroke-dasharray="1 5.2" stroke-linecap="round"/>
+     <text x="101" y="128" text-anchor="middle" font-family="Swash" font-size="86" fill="url(#letra)" stroke="#4b5363" stroke-width=".8">L</text>
+     <path d="M66 70 l1.6 4.4 4.4 1.6 -4.4 1.6 -1.6 4.4 -1.6 -4.4 -4.4 -1.6 4.4 -1.6z" fill="#fff"/>
+     <path d="M136 82 l1.2 3.3 3.3 1.2 -3.3 1.2 -1.2 3.3 -1.2 -3.3 -3.3 -1.2 3.3 -1.2z" fill="#fff"/>
+     <path d="M74 132 l1 2.8 2.8 1 -2.8 1 -1 2.8 -1 -2.8 -2.8 -1 2.8 -1z" fill="#fff"/>
+     <path d="M132 128 l1.4 3.8 3.8 1.4 -3.8 1.4 -1.4 3.8 -1.4 -3.8 -3.8 -1.4 3.8 -1.4z" fill="#fff"/>
+    </g>
+   </svg>
+  </button>
+
+  <div class="reflexo" style="left:34%;top:49%;--s:70px;--a:.3s"></div>
+  <div class="reflexo" style="left:64%;top:62%;--s:46px;--a:1.7s;--d:3.6s"></div>
+  <div class="reflexo" style="left:24%;top:17%;--s:56px;--a:.9s;--d:4s"></div>
+  <div class="reflexo" style="left:79%;top:23%;--s:64px;--a:2.4s;--d:3.4s"></div>
+  <div class="reflexo" style="left:84%;top:9%;--s:40px;--a:1.2s"></div>
+  <div class="reflexo" style="left:12%;top:72%;--s:50px;--a:2.9s;--d:4.2s"></div>
+  <div class="reflexo" style="left:88%;top:80%;--s:44px;--a:.6s;--d:3.8s"></div>
+
+  <div class="toque prata">Toque no lacre<small>PARA ABRIR SEU CONVITE</small></div>
+  <div class="clarao"></div>
  </div>
- <button class="btn-abrir" id="abrir" type="button">✦ ABRIR CONVITE</button>
- <div class="capa-dica">Toque para abrir</div>
 </section>
+
+<button class="som hidden" id="som" type="button" aria-label="Desligar música" title="Música">
+ <svg viewBox="0 0 24 24" aria-hidden="true"><path class="nota" d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/><path class="corta" d="M3 3l18 18"/></svg>
+</button>
 
 <!-- ===== CONVITE ABERTO ===== -->
 <main id="convite" class="hidden">
@@ -297,10 +447,9 @@ input::placeholder{color:rgba(230,236,248,.4)}
  <h2 class="gold glow" id="t-dress"><span class="s">D</span><span class="c">ress code</span></h2>
  <p class="lead">Traje da noite</p>
  <div class="centro"><span class="chip">ESPORTE FINO</span></div>
- <p class="lead">Elegante e confortável para aproveitar a festa a noite toda.</p>
- <ul class="lista">
-  <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M9 2v3l-2 4 2 2-5 11h16l-5-11 2-2-2-4V2"/></svg></span><div><b>Para elas</b><span>Vestido midi ou longo, conjunto de saia ou calça de alfaiataria, macacão elegante. Salto ou sandália confortável.</span></div></li>
-  <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M8 3l4 4 4-4 5 3-2 5h-2v10H7V11H5L3 6z"/><path d="M12 7v6"/></svg></span><div><b>Para eles</b><span>Calça social ou de sarja, camisa social ou polo elegante. Blazer é opcional. Sapato ou sapatênis.</span></div></li>
+ <ul class="lista" style="margin-top:18px">
+  <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M8 3l4 4 4-4 5 3-2 5h-2v10H7V11H5L3 6z"/><path d="M12 7v6"/></svg></span><div><b>Para eles</b><span>Esporte fino</span></div></li>
+  <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M9 2v3l-2 4 2 2-5 11h16l-5-11 2-2-2-4V2"/></svg></span><div><b>Para elas</b><span>Passeio (o equivalente feminino do esporte fino)</span></div></li>
   <li class="alerta"><span class="ic"><span class="semazul"></span></span><div><b>Não use azul</b><span>O azul, em qualquer tom, é a cor reservada para a debutante nesta noite.</span></div></li>
  </ul>
 </section>
@@ -315,6 +464,8 @@ input::placeholder{color:rgba(230,236,248,.4)}
   <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M6 3h12l2 18h-6l-2-11-2 11H4z"/></svg></span><div><b>Short, saia ou calça</b><span class="tam">TAMANHO 38</span></div></li>
   <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M8 3l4 3 4-3 5 3-2 5h-2v10H7V11H5L3 6z"/></svg></span><div><b>Blusas</b><span class="tam">TAMANHO P (ADULTO)</span></div></li>
   <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 17c0-3 1-7 3-9l3 2c2 1 4 1 6 3l5 2c1 .5 1 2.5 0 3H4c-.6 0-1-.4-1-1z"/><path d="M3 20h18"/></svg></span><div><b>Calçados</b><span class="tam">NÚMERO 35/36</span></div></li>
+  <li><span class="ic"><svg viewBox="0 0 24 24"><rect x="9" y="10" width="6" height="11" rx="1.5"/><path d="M10 10V6l4-3v7"/></svg></span><div><b>Cosméticos</b><span>Maquiagem, skincare, hidratantes e cuidados para o cabelo.</span></div></li>
+  <li><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="15" r="5"/><path d="M9.5 10.5L8 4h8l-1.5 6.5"/><path d="M12 13l.8 1.6 1.7.3-1.2 1.2.3 1.7-1.6-.8-1.6.8.3-1.7-1.2-1.2 1.7-.3z"/></svg></span><div><b>Acessórios</b><span>Bijuterias, colares, brincos, pulseiras, bolsas e acessórios de cabelo.</span></div></li>
  </ul>
 </section>
 
@@ -328,7 +479,6 @@ input::placeholder{color:rgba(230,236,248,.4)}
   <li><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><b>Chegue no horário</b><span>A recepção começa às 21h. Chegue com antecedência para não perder a entrada da debutante.</span></div></li>
   <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/><circle cx="12" cy="12" r="10"/></svg></span><div><b>Confirme sua presença</b><span>Use o botão “Confirmar presença” o quanto antes. Isso ajuda muito na organização.</span></div></li>
   <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="2 2"/></svg></span><div><b>Convite individual</b><span>O convite é pessoal e intransferível. Cada convidado confirma a sua própria presença.</span></div></li>
-  <li><span class="ic"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></span><div><b>Viva o momento</b><span>Na entrada e na valsa, guarde um pouco o celular e aproveite com a gente.</span></div></li>
   <li><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z"/></svg></span><div><b>Divirta-se!</b><span>Dance, celebre e faça dessa noite uma lembrança inesquecível.</span></div></li>
  </ul>
 </section>
@@ -412,23 +562,174 @@ for (let i = 0; i < 14; i++) {
   $('vestido').appendChild(v);
 }
 
-// abrir o envelope
+// ===== céu da capa: Via Láctea e estrelas cintilantes (canvas) =====
+const ceu = (() => {
+  const c = $('ceu'), g = c.getContext('2d');
+  let w, h, dpr, fundo, brilhos = [], cruzes = [], vivo = true;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
+  function montar() {
+    dpr = Math.min(devicePixelRatio || 1, 2); w = innerWidth; h = innerHeight;
+    c.width = w * dpr; c.height = h * dpr;
+    fundo = document.createElement('canvas'); fundo.width = c.width; fundo.height = c.height;
+    const f = fundo.getContext('2d'); f.scale(dpr, dpr);
+    let gr = f.createRadialGradient(w * .5, h * .45, 0, w * .5, h * .45, Math.max(w, h) * .85);
+    gr.addColorStop(0, '#16296e'); gr.addColorStop(.45, '#0b1747'); gr.addColorStop(1, '#030719');
+    f.fillStyle = gr; f.fillRect(0, 0, w, h);
+    // Via Láctea: faixa diagonal de nuvens e poeira estelar
+    const ax = -w * .1, ay = h * .92, bx = w * 1.1, by = h * .08, dx = bx - ax, dy = by - ay, L = Math.hypot(dx, dy), nx = -dy / L, ny = dx / L;
+    for (let i = 0; i < 700; i++) {
+      const t = Math.random(), off = gauss() * Math.min(w, h) * .2, x = ax + dx * t + nx * off, y = ay + dy * t + ny * off, r = rnd(20, 90);
+      const q = f.createRadialGradient(x, y, 0, x, y, r), tom = Math.random() < .25 ? '190,170,255' : '150,175,255';
+      q.addColorStop(0, `rgba(${tom},${rnd(.02, .05)})`); q.addColorStop(1, `rgba(${tom},0)`);
+      f.fillStyle = q; f.beginPath(); f.arc(x, y, r, 0, 7); f.fill();
+    }
+    for (let i = 0; i < 260; i++) { // faixas escuras de poeira
+      const t = Math.random(), off = gauss() * Math.min(w, h) * .05, x = ax + dx * t + nx * off, y = ay + dy * t + ny * off, r = rnd(10, 40);
+      const q = f.createRadialGradient(x, y, 0, x, y, r); q.addColorStop(0, 'rgba(3,6,25,.18)'); q.addColorStop(1, 'rgba(3,6,25,0)');
+      f.fillStyle = q; f.beginPath(); f.arc(x, y, r, 0, 7); f.fill();
+    }
+    for (let i = 0; i < 3200; i++) {
+      const t = Math.random(), off = gauss() * Math.min(w, h) * .16, x = ax + dx * t + nx * off, y = ay + dy * t + ny * off;
+      f.fillStyle = `rgba(235,240,255,${rnd(.08, .55)})`; f.fillRect(x, y, rnd(.4, 1.1), rnd(.4, 1.1));
+    }
+    for (let i = 0; i < 420; i++) {
+      const x = Math.random() * w, y = Math.random() * h, r = rnd(.3, 1.2);
+      f.fillStyle = `rgba(255,255,255,${rnd(.25, .9)})`; f.beginPath(); f.arc(x, y, r, 0, 7); f.fill();
+    }
+    brilhos = Array.from({ length: Math.round(w * h / 9000) }, () => ({ x: Math.random() * w, y: Math.random() * h, r: rnd(.6, 1.8), f: rnd(.6, 2.2), p: rnd(0, 7) }));
+    cruzes = Array.from({ length: Math.round(w * h / 38000) + 6 }, () => ({ x: Math.random() * w, y: Math.random() * h, s: rnd(5, 16), f: rnd(.5, 1.4), p: rnd(0, 7) }));
+  }
+  function quadro(ms) {
+    if (!vivo) return;
+    const t = ms / 1000;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.drawImage(fundo, 0, 0, w, h);
+    for (const b of brilhos) {
+      const a = .25 + .75 * (.5 + .5 * Math.sin(t * b.f + b.p)), r = b.r * 3.2;
+      const q = g.createRadialGradient(b.x, b.y, 0, b.x, b.y, r);
+      q.addColorStop(0, `rgba(255,255,255,${a})`); q.addColorStop(.35, `rgba(220,230,255,${a * .45})`); q.addColorStop(1, 'rgba(200,215,255,0)');
+      g.fillStyle = q; g.beginPath(); g.arc(b.x, b.y, r, 0, 7); g.fill();
+    }
+    for (const k of cruzes) {
+      const a = Math.max(0, Math.sin(t * k.f + k.p)), s = k.s * (.5 + a);
+      if (a < .05) continue;
+      g.globalAlpha = a;
+      for (const [vx, vy, len] of [[1, 0, s], [0, 1, s], [.7, .7, s * .45], [.7, -.7, s * .45]]) {
+        const q = g.createLinearGradient(k.x - vx * len, k.y - vy * len, k.x + vx * len, k.y + vy * len);
+        q.addColorStop(0, 'rgba(255,255,255,0)'); q.addColorStop(.5, 'rgba(255,255,255,1)'); q.addColorStop(1, 'rgba(255,255,255,0)');
+        g.strokeStyle = q; g.lineWidth = len === s ? 1.2 : .8; g.beginPath(); g.moveTo(k.x - vx * len, k.y - vy * len); g.lineTo(k.x + vx * len, k.y + vy * len); g.stroke();
+      }
+      const q = g.createRadialGradient(k.x, k.y, 0, k.x, k.y, s * .35); q.addColorStop(0, 'rgba(255,255,255,1)'); q.addColorStop(1, 'rgba(210,225,255,0)');
+      g.fillStyle = q; g.beginPath(); g.arc(k.x, k.y, s * .35, 0, 7); g.fill();
+      g.globalAlpha = 1;
+    }
+    requestAnimationFrame(quadro);
+  }
+  montar(); requestAnimationFrame(quadro);
+  addEventListener('resize', () => vivo && montar());
+  return { parar: () => { vivo = false; } };
+})();
+
+// ===== melodia: valsa suave de caixinha de música (composta aqui, tocada pelo navegador) =====
+const musica = (() => {
+  let ctx, mestre, ligado = false, iniciado = false, prox = 0, passo = 0, timer;
+  const BPM = 76, T = 60 / BPM, hz = m => 440 * Math.pow(2, (m - 69) / 12);
+  // [nota, tempos] por compasso (3/4)
+  const MELODIA = [
+    [[69,1],[78,1],[76,1]], [[74,1.5],[73,.5],[71,1]], [[71,1],[74,1],[79,1]], [[78,2],[76,1]],
+    [[81,1],[78,1],[74,1]], [[73,1],[76,1],[81,1]], [[79,1],[78,.5],[76,.5],[74,1]], [[76,3]],
+    [[83,1],[81,1],[79,1]], [[78,1.5],[76,.5],[74,1]], [[76,1],[79,1],[83,1]], [[81,2],[73,1]],
+    [[74,1],[78,1],[81,1]], [[83,1.5],[81,.5],[78,1]], [[79,1],[76,1],[73,1]], [[74,3]]
+  ];
+  const ACORDES = [[50,0],[47,1],[43,0],[45,0],[50,0],[42,1],[43,0],[45,0],[43,0],[50,0],[40,1],[45,0],[50,0],[47,1],[43,0],[50,0]];
+  const tons = ([r, m]) => [r, r + (m ? 3 : 4), r + 7];
+  function reverb() {
+    const len = ctx.sampleRate * 3.2, b = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let ch = 0; ch < 2; ch++) { const d = b.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+    const cv = ctx.createConvolver(); cv.buffer = b; return cv;
+  }
+  function sino(m, t, vol, dur = 2.2) { // caixinha de música
+    const f = hz(m);
+    [[1, 1], [2.01, .18], [3.98, .07], [6.2, .025]].forEach(([mult, a]) => {
+      const o = ctx.createOscillator(), gn = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = f * mult;
+      gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(vol * a, t + .006);
+      gn.gain.exponentialRampToValueAtTime(.0001, t + dur / (mult > 1 ? mult * .7 : 1));
+      o.connect(gn).connect(mestre); o.start(t); o.stop(t + dur + .1);
+    });
+  }
+  function manto(notas, t, dur) { // cama suave de cordas
+    notas.forEach(m => {
+      [-6, 6].forEach(det => {
+        const o = ctx.createOscillator(), gn = ctx.createGain(), lp = ctx.createBiquadFilter();
+        o.type = 'triangle'; o.frequency.value = hz(m); o.detune.value = det;
+        lp.type = 'lowpass'; lp.frequency.value = 900;
+        gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(.022, t + dur * .4); gn.gain.linearRampToValueAtTime(0, t + dur + .3);
+        o.connect(lp).connect(gn).connect(mestre); o.start(t); o.stop(t + dur + .4);
+      });
+    });
+  }
+  function compasso(i, t) {
+    const ac = tons(ACORDES[i]);
+    sino(ac[0] - 12 + 12, t, .16, 2.6);                  // baixo no 1º tempo
+    sino(ac[1] + 12, t + T, .07, 1.4); sino(ac[2] + 12, t + T, .06, 1.4);
+    sino(ac[1] + 12, t + 2 * T, .06, 1.4); sino(ac[2] + 12, t + 2 * T, .05, 1.4);
+    manto(ac.map(n => n + 12), t, 3 * T);
+    let x = t; for (const [n, d] of MELODIA[i]) { sino(n, x, .2, 2.4); x += d * T; }
+  }
+  function agenda() {
+    while (prox < ctx.currentTime + .6) { compasso(passo % 16, prox); prox += 3 * T; passo++; }
+  }
+  return {
+    tocar() {
+      try {
+        if (!iniciado) {
+          ctx = new (window.AudioContext || window.webkitAudioContext)();
+          mestre = ctx.createGain(); mestre.gain.value = 0;
+          const seco = ctx.createGain(), mol = ctx.createGain(), rv = reverb();
+          seco.gain.value = .75; mol.gain.value = .55;
+          mestre.connect(seco).connect(ctx.destination); mestre.connect(rv).connect(mol).connect(ctx.destination);
+          prox = ctx.currentTime + .15; iniciado = true;
+          timer = setInterval(agenda, 150); agenda();
+        }
+        ctx.resume(); ligado = true;
+        mestre.gain.cancelScheduledValues(ctx.currentTime);
+        mestre.gain.setTargetAtTime(.55, ctx.currentTime, .8);
+      } catch (e) {}
+    },
+    pausar() {
+      if (!iniciado) return; ligado = false;
+      mestre.gain.setTargetAtTime(0, ctx.currentTime, .25);
+      setTimeout(() => { if (!ligado) ctx.suspend(); }, 900);
+    },
+    get ligado() { return ligado; }
+  };
+})();
+$('som').onclick = () => {
+  if (musica.ligado) { musica.pausar(); $('som').classList.add('mudo'); $('som').setAttribute('aria-label', 'Ligar música'); }
+  else { musica.tocar(); $('som').classList.remove('mudo'); $('som').setAttribute('aria-label', 'Desligar música'); }
+};
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && musica.ligado) { musica.pausar(); $('som').dataset.auto = '1'; }
+  else if (!document.hidden && $('som').dataset.auto) { delete $('som').dataset.auto; musica.tocar(); }
+});
+
+// ===== abrir o envelope: o lacre estoura, a fita solta e as abas abrem =====
+let abriu = false;
 $('abrir').onclick = () => {
-  $('abrir').disabled = true;
+  if (abriu) return; abriu = true;
+  musica.tocar();
+  const r = $('abrir').getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  explode(cx, cy, 70, Math.min(innerWidth, 420) * .7);
+  setTimeout(() => explode(cx, cy, 40, 140), 180);
   $('capa').classList.add('abrindo');
-  const sl = document.querySelector('.env .seal').getBoundingClientRect();
-  explode(sl.left + sl.width / 2, sl.top + sl.height / 2, 24, 120);
-  $('env').classList.add('aberto');
-  setTimeout(() => $('env').classList.add('zoom'), 1600);
-  setTimeout(() => $('capa').classList.add('sai'), 2100);
+  setTimeout(() => { $('convite').classList.remove('hidden'); window.scrollTo(0, 0); }, 900);
   setTimeout(() => {
-    $('capa').classList.add('hidden');
-    document.body.classList.remove('lock');
-    $('convite').classList.remove('hidden');
-    window.scrollTo(0, 0);
-    requestAnimationFrame(() => $('convite').classList.add('mostra'));
+    $('capa').classList.add('sai'); document.body.classList.remove('lock');
+    $('convite').classList.add('mostra'); $('som').classList.remove('hidden');
     setTimeout(() => explode(innerWidth / 2, Math.min(innerHeight * .35, 300), 40, 220), 500);
-  }, 2700);
+  }, 2100);
+  setTimeout(() => { $('capa').classList.add('hidden'); ceu.parar(); }, 3200);
 };
 
 // janelas (dress code, presentes, manual, local, confirmar)
