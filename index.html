@@ -650,107 +650,37 @@ const ceu = (() => {
   return { parar: () => { vivo = false; } };
 })();
 
-// ===== melodia: valsa suave de caixinha de música (composta aqui, tocada pelo navegador) =====
-const musica = (() => {
-  let ctx, mestre, ligado = false, iniciado = false, prox = 0, passo = 0, timer;
-  const BPM = 76, T = 60 / BPM, hz = m => 440 * Math.pow(2, (m - 69) / 12);
-  // [nota, tempos] por compasso (3/4)
-  const MELODIA = [
-    [[69,1],[78,1],[76,1]], [[74,1.5],[73,.5],[71,1]], [[71,1],[74,1],[79,1]], [[78,2],[76,1]],
-    [[81,1],[78,1],[74,1]], [[73,1],[76,1],[81,1]], [[79,1],[78,.5],[76,.5],[74,1]], [[76,3]],
-    [[83,1],[81,1],[79,1]], [[78,1.5],[76,.5],[74,1]], [[76,1],[79,1],[83,1]], [[81,2],[73,1]],
-    [[74,1],[78,1],[81,1]], [[83,1.5],[81,.5],[78,1]], [[79,1],[76,1],[73,1]], [[74,3]]
-  ];
-  const ACORDES = [[50,0],[47,1],[43,0],[45,0],[50,0],[42,1],[43,0],[45,0],[43,0],[50,0],[40,1],[45,0],[50,0],[47,1],[43,0],[50,0]];
-  const tons = ([r, m]) => [r, r + (m ? 3 : 4), r + 7];
-  function reverb() {
-    const len = ctx.sampleRate * 3.2, b = ctx.createBuffer(2, len, ctx.sampleRate);
-    for (let ch = 0; ch < 2; ch++) { const d = b.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
-    const cv = ctx.createConvolver(); cv.buffer = b; return cv;
-  }
-  function sino(m, t, vol, dur = 2.2) { // caixinha de música
-    const f = hz(m);
-    [[1, 1], [2.01, .18], [3.98, .07], [6.2, .025]].forEach(([mult, a]) => {
-      const o = ctx.createOscillator(), gn = ctx.createGain();
-      o.type = 'sine'; o.frequency.value = f * mult;
-      gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(vol * a, t + .006);
-      gn.gain.exponentialRampToValueAtTime(.0001, t + dur / (mult > 1 ? mult * .7 : 1));
-      o.connect(gn).connect(mestre); o.start(t); o.stop(t + dur + .1);
-    });
-  }
-  function manto(notas, t, dur) { // cama suave de cordas
-    notas.forEach(m => {
-      [-6, 6].forEach(det => {
-        const o = ctx.createOscillator(), gn = ctx.createGain(), lp = ctx.createBiquadFilter();
-        o.type = 'triangle'; o.frequency.value = hz(m); o.detune.value = det;
-        lp.type = 'lowpass'; lp.frequency.value = 900;
-        gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(.022, t + dur * .4); gn.gain.linearRampToValueAtTime(0, t + dur + .3);
-        o.connect(lp).connect(gn).connect(mestre); o.start(t); o.stop(t + dur + .4);
-      });
-    });
-  }
-  function compasso(i, t) {
-    const ac = tons(ACORDES[i]);
-    sino(ac[0] - 12 + 12, t, .16, 2.6);                  // baixo no 1º tempo
-    sino(ac[1] + 12, t + T, .07, 1.4); sino(ac[2] + 12, t + T, .06, 1.4);
-    sino(ac[1] + 12, t + 2 * T, .06, 1.4); sino(ac[2] + 12, t + 2 * T, .05, 1.4);
-    manto(ac.map(n => n + 12), t, 3 * T);
-    let x = t; for (const [n, d] of MELODIA[i]) { sino(n, x, .2, 2.4); x += d * T; }
-  }
-  function agenda() {
-    while (prox < ctx.currentTime + .6) { compasso(passo % 16, prox); prox += 3 * T; passo++; }
-  }
-  return {
-    tocar() {
-      try {
-        if (!iniciado) {
-          ctx = new (window.AudioContext || window.webkitAudioContext)();
-          mestre = ctx.createGain(); mestre.gain.value = 0;
-          const seco = ctx.createGain(), mol = ctx.createGain(), rv = reverb();
-          seco.gain.value = .75; mol.gain.value = .55;
-          mestre.connect(seco).connect(ctx.destination); mestre.connect(rv).connect(mol).connect(ctx.destination);
-          prox = ctx.currentTime + .15; iniciado = true;
-          timer = setInterval(agenda, 150); agenda();
-        }
-        ctx.resume(); ligado = true;
-        mestre.gain.cancelScheduledValues(ctx.currentTime);
-        mestre.gain.setTargetAtTime(.55, ctx.currentTime, .8);
-      } catch (e) {}
-    },
-    pausar() {
-      if (!iniciado) return; ligado = false;
-      mestre.gain.setTargetAtTime(0, ctx.currentTime, .25);
-      setTimeout(() => { if (!ligado) ctx.suspend(); }, 900);
-    },
-    get ligado() { return ligado; }
-  };
-})();
-$('som').onclick = () => {
-  if (musica.ligado) { musica.pausar(); $('som').classList.add('mudo'); $('som').setAttribute('aria-label', 'Ligar música'); }
-  else { yt('pauseVideo'); musica.tocar(); $('som').classList.remove('mudo'); $('som').setAttribute('aria-label', 'Desligar música'); }
-};
-// player oficial do YouTube: ao dar play, a valsa de fundo pausa
+// ===== música: "A Thousand Years" pelo player oficial do YouTube =====
+// começa a tocar quando o convidado toca no lacre; o botão de nota pausa e retoma
+let ytTocando = false;
 const yt = cmd => { const f = document.querySelector('#video iframe'); if (f) f.contentWindow.postMessage(JSON.stringify({ event: 'command', func: cmd, args: [] }), '*'); };
-$('tocarMusica').onclick = () => {
-  if (musica.ligado) { musica.pausar(); $('som').classList.add('mudo'); $('som').setAttribute('aria-label', 'Ligar música'); }
-  $('video').innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/rtOvBOTyX00?autoplay=1&playsinline=1&rel=0&enablejsapi=1" title="A Thousand Years · Christina Perri" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
-  $('video').classList.remove('hidden'); $('tocarMusica').classList.add('hidden');
-};
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden && musica.ligado) { musica.pausar(); $('som').dataset.auto = '1'; }
-  else if (!document.hidden && $('som').dataset.auto) { delete $('som').dataset.auto; musica.tocar(); }
+function marcaSom(on) { ytTocando = on; $('som').classList.toggle('mudo', !on); $('som').setAttribute('aria-label', on ? 'Pausar música' : 'Tocar música'); }
+function carregaVideo() {
+  if (document.querySelector('#video iframe')) return;
+  const f = document.createElement('iframe');
+  f.src = 'https://www.youtube-nocookie.com/embed/rtOvBOTyX00?autoplay=1&playsinline=1&rel=0&enablejsapi=1&origin=' + encodeURIComponent(location.origin);
+  f.title = 'A Thousand Years · Christina Perri';
+  f.allow = 'autoplay; encrypted-media; picture-in-picture'; f.allowFullscreen = true;
+  f.onload = () => f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'convite' }), '*');
+  $('video').appendChild(f); $('video').classList.remove('hidden'); $('tocarMusica').classList.add('hidden');
+}
+addEventListener('message', e => {
+  if (!/youtube/.test(e.origin)) return;
+  try { const d = JSON.parse(e.data), st = d.info && d.info.playerState; if (st === 1) marcaSom(true); else if (st === 2 || st === 0) marcaSom(false); } catch (_) {}
 });
+$('tocarMusica').onclick = carregaVideo;
+$('som').onclick = () => { if (!document.querySelector('#video iframe')) { carregaVideo(); return; } yt(ytTocando ? 'pauseVideo' : 'playVideo'); marcaSom(!ytTocando); };
 
 // ===== abrir o envelope: o lacre estoura, a fita solta e as abas abrem =====
 let abriu = false;
 $('abrir').onclick = () => {
   if (abriu) return; abriu = true;
-  musica.tocar();
+  $('convite').classList.remove('hidden'); carregaVideo(); marcaSom(true);
   const r = $('abrir').getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
   explode(cx, cy, 70, Math.min(innerWidth, 420) * .7);
   setTimeout(() => explode(cx, cy, 40, 140), 180);
   $('capa').classList.add('abrindo');
-  setTimeout(() => { $('convite').classList.remove('hidden'); window.scrollTo(0, 0); }, 900);
+  setTimeout(() => window.scrollTo(0, 0), 900);
   setTimeout(() => {
     $('capa').classList.add('sai'); document.body.classList.remove('lock');
     $('convite').classList.add('mostra'); $('som').classList.remove('hidden');
