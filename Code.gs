@@ -31,6 +31,7 @@ function doGet(e) {
   if (!e || !e.parameter || e.parameter.key !== SENHA_ADMIN) return out({ ok: false, erro: 'senha' });
   const sh = SpreadsheetApp.openById(PLANILHA_ID).getSheetByName(ABA);
   if (e.parameter.acao === 'excluir') return out(excluir(sh, e.parameter.data, e.parameter.nome));
+  if (e.parameter.acao === 'editar') return out(editar(sh, e.parameter));
   if (!sh || sh.getLastRow() < 2) return out({ ok: true, rows: [] });
   const rows = sh.getRange(2, 1, sh.getLastRow() - 1, CAB.length).getValues().map(r => ({
     data: r[0] instanceof Date ? r[0].toISOString() : String(r[0]),
@@ -56,6 +57,31 @@ function excluir(sh, data, nome) {
       }
     }
     return { ok: false, excluido: false, erro: 'nao_encontrado' };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+// Edita uma resposta: acha a linha pela data/hora + nome e troca nome, idade e "Vai?".
+function editar(sh, p) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    if (!sh || sh.getLastRow() < 2) return { ok: false, editado: false, erro: 'nao_encontrado' };
+    const vai = p.novoVai === 'Sim' ? 'Sim' : 'Não';
+    const nome = String(p.novoNome || '').trim();
+    if (!nome) return { ok: false, editado: false, erro: 'nome' };
+    const alvo = new Date(p.data).getTime();
+    const vals = sh.getRange(2, 1, sh.getLastRow() - 1, 2).getValues();
+    for (let i = vals.length - 1; i >= 0; i--) {
+      const d = vals[i][0], n = String(vals[i][1]).trim();
+      const mesmaData = d instanceof Date ? Math.abs(d.getTime() - alvo) < 1000 : String(d) === String(p.data);
+      if (mesmaData && n === String(p.nome).trim()) {
+        sh.getRange(i + 2, 2, 1, 3).setValues([[nome, Number(p.novaIdade), vai]]);
+        return { ok: true, editado: true };
+      }
+    }
+    return { ok: false, editado: false, erro: 'nao_encontrado' };
   } finally {
     lock.releaseLock();
   }
