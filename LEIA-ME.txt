@@ -3,14 +3,14 @@ CONFIRMAÇÃO DE PRESENÇA + ADMIN, 15 anos da Letícia Maria
 
 ARQUIVOS
   index.html  convite + formulário de confirmação (link para os convidados)
-  admin.html  painel com senha: total de pessoas, quem vai, quem não vai, acompanhantes
+  admin.html  painel com senha: quem vai, quem não vai e exportar em .xlsx
   config.js   configuração usada pelas duas páginas
   Code.gs     script da planilha do Google (recebe as respostas e alimenta o admin)
 
 1) PLANILHA (uns 5 minutos)
    a. Crie uma planilha nova no Google Planilhas.
    b. Extensões > Apps Script. Apague o que houver e cole o Code.gs.
-   c. Na 1ª linha do Code.gs, troque  'troque-esta-senha'  pela senha do admin. Salve.
+   c. A senha do admin já está no Code.gs (SENHA_ADMIN). Salve.
    d. Implantar > Nova implantação > "App da Web".
         Executar como: Eu  |  Quem pode acessar: Qualquer pessoa
       Implante e autorize com sua conta Google.

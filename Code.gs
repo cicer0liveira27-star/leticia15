@@ -1,8 +1,8 @@
 // Google Apps Script — recebe as confirmações do site, grava na planilha
 // e entrega a lista para a página de admin (protegida por senha).
-const SENHA_ADMIN = 'troque-esta-senha';   // <<< defina a senha do admin aqui
+const SENHA_ADMIN = 'Master@2026';   // senha do painel de admin
 const ABA = 'Confirmações';
-const CAB = ['Data/hora', 'Nome', 'Idade', 'Vai?', 'Nº acompanhantes', 'Acompanhantes (nome e idade)', 'Total de pessoas'];
+const CAB = ['Data/hora', 'Nome', 'Idade', 'Vai?'];
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
@@ -18,7 +18,7 @@ function doPost(e) {
     }
     montarResumo(ss);
     const p = e.parameter;
-    sh.appendRow([new Date(), p.nome, Number(p.idade), p.presenca, Number(p.qtd_acompanhantes || 0), p.acompanhantes || '', Number(p.total_pessoas || 0)]);
+    sh.appendRow([new Date(), p.nome, Number(p.idade), p.presenca]);
     return ContentService.createTextOutput(JSON.stringify({ ok: true })).setMimeType(ContentService.MimeType.JSON);
   } finally {
     lock.releaseLock();
@@ -32,7 +32,7 @@ function doGet(e) {
   if (!sh || sh.getLastRow() < 2) return out({ ok: true, rows: [] });
   const rows = sh.getRange(2, 1, sh.getLastRow() - 1, CAB.length).getValues().map(r => ({
     data: r[0] instanceof Date ? r[0].toISOString() : String(r[0]),
-    nome: r[1], idade: r[2], vai: r[3], qtd: r[4], acompanhantes: r[5], total: r[6]
+    nome: r[1], idade: r[2], vai: r[3]
   }));
   return out({ ok: true, rows });
 }
@@ -42,12 +42,11 @@ function montarResumo(ss) {
   if (ss.getSheetByName('Resumo')) return;
   const r = ss.insertSheet('Resumo', 0);
   r.getRange('A1:B1').setValues([['15 anos da Letícia Maria', '']]).setFontWeight('bold');
-  r.getRange('A3:A6').setValues([['Pessoas confirmadas (total)'], ['Respostas "Sim"'], ['Respostas "Não"'], ['Acompanhantes']]);
-  r.getRange('B3:B6').setFormulas([
-    ["=SUMIF('Confirmações'!D:D;\"Sim\";'Confirmações'!G:G)"],
+  r.getRange('A3:A5').setValues([['Pessoas confirmadas (vão)'], ['Não vão'], ['Total de respostas']]);
+  r.getRange('B3:B5').setFormulas([
     ["=COUNTIF('Confirmações'!D:D;\"Sim\")"],
     ["=COUNTIF('Confirmações'!D:D;\"Não\")"],
-    ["=SUMIF('Confirmações'!D:D;\"Sim\";'Confirmações'!E:E)"]
+    ["=COUNTA('Confirmações'!B:B)-1"]
   ]);
   r.getRange('B3').setFontSize(18).setFontWeight('bold').setFontColor('#1d43a6');
   r.setColumnWidth(1, 240);

@@ -33,9 +33,9 @@ input::placeholder{color:rgba(230,236,248,.4)}
 .full{display:block;width:100%;margin-top:22px;text-align:center}
 .err{color:#ffd6d6;text-align:center;margin-top:10px;min-height:1em;font-size:15px}
 .hidden{display:none!important}
-.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:6px 0 18px}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:6px 0 18px}
 .tile{text-align:center;padding:14px 6px 12px;border-radius:22px;background:rgba(10,29,99,.55);border:1.4px solid rgba(217,223,233,.55)}
-.tile.main{grid-column:span 4;padding:18px 6px}
+.tile.main{grid-column:span 2;padding:18px 6px}
 .tile b{display:block;font-family:Poiret,sans-serif;font-weight:400;font-size:36px;line-height:1.1}
 .tile.main b{font-size:64px}
 .tile span{font-family:Poiret,sans-serif;font-size:12px;letter-spacing:1.8px;color:#e6ebf5;text-transform:uppercase}
@@ -72,15 +72,13 @@ input::placeholder{color:rgba(230,236,248,.4)}
  <div id="dash" class="hidden">
   <div class="tiles">
    <div class="tile main"><b class="gold" id="tTotal">0</b><span>Pessoas confirmadas</span></div>
-   <div class="tile"><b class="gold" id="tSim">0</b><span>Vão</span></div>
-   <div class="tile"><b class="gold" id="tAcomp">0</b><span>Acompanhantes</span></div>
    <div class="tile"><b class="gold" id="tNao">0</b><span>Não vão</span></div>
    <div class="tile"><b class="gold" id="tResp">0</b><span>Respostas</span></div>
   </div>
   <div class="bar"><input id="busca" type="search" placeholder="Buscar por nome"><button class="pill ghost" id="atualizar" type="button">↻</button></div>
   <div class="tabs" id="tabs"><button data-f="todos" class="on">TODOS</button><button data-f="Sim">VÃO</button><button data-f="Não">NÃO VÃO</button></div>
   <div class="list" id="lista"></div>
-  <div class="foot"><span id="upd"></span><span><button class="pill ghost" id="copiar" type="button">COPIAR LISTA</button> <button class="pill ghost" id="sair" type="button">SAIR</button></span></div>
+  <div class="foot"><span id="upd"></span><span><button class="pill" id="exportar" type="button">⬇ EXPORTAR XLSX</button> <button class="pill ghost" id="copiar" type="button">COPIAR LISTA</button> <button class="pill ghost" id="sair" type="button">SAIR</button></span></div>
  </div>
 </section>
 
@@ -103,14 +101,13 @@ async function carregar() {
 }
 function render() {
   const sim = rows.filter(r => r.vai === 'Sim'), nao = rows.filter(r => r.vai === 'Não');
-  $('tTotal').textContent = sim.reduce((a, r) => a + (+r.total || 0), 0);
-  $('tSim').textContent = sim.length; $('tNao').textContent = nao.length; $('tResp').textContent = rows.length;
-  $('tAcomp').textContent = sim.reduce((a, r) => a + (+r.qtd || 0), 0);
+  $('tTotal').textContent = sim.length;
+  $('tNao').textContent = nao.length; $('tResp').textContent = rows.length;
   const q = $('busca').value.trim().toLowerCase();
-  const vis = rows.filter(r => (filtro === 'todos' || r.vai === filtro) && (!q || String(r.nome).toLowerCase().includes(q) || String(r.acompanhantes).toLowerCase().includes(q)));
+  const vis = rows.filter(r => (filtro === 'todos' || r.vai === filtro) && (!q || String(r.nome).toLowerCase().includes(q)));
   $('lista').innerHTML = vis.length ? vis.map(r => `
-    <div class="item"><div class="top"><span class="n">${esc(r.nome)}</span><span class="tag ${r.vai === 'Sim' ? 'sim' : 'nao'}">${r.vai === 'Sim' ? `VAI · ${esc(r.total)} ${+r.total === 1 ? 'PESSOA' : 'PESSOAS'}` : 'NÃO VAI'}</span></div>
-    <div class="meta">${esc(r.idade)} anos${r.acompanhantes ? ` · Acompanhantes: ${esc(r.acompanhantes)}` : ''}<br><small>${fmt(r.data)}</small></div></div>`).join('')
+    <div class="item"><div class="top"><span class="n">${esc(r.nome)}</span><span class="tag ${r.vai === 'Sim' ? 'sim' : 'nao'}">${r.vai === 'Sim' ? 'VAI' : 'NÃO VAI'}</span></div>
+    <div class="meta">${esc(r.idade)} anos<br><small>${fmt(r.data)}</small></div></div>`).join('')
     : '<div class="empty">Nenhuma confirmação ainda.</div>';
 }
 async function entrar(silencioso) {
@@ -126,8 +123,53 @@ $('atualizar').onclick = () => carregar().catch(() => {});
 $('sair').onclick = () => { try { sessionStorage.removeItem('adm_key'); } catch (e) {} location.reload(); };
 $('copiar').onclick = async () => {
   const sim = rows.filter(r => r.vai === 'Sim');
-  const txt = `Confirmados, 15 anos da Letícia Maria (${$('tTotal').textContent} pessoas)\n` + sim.map((r, i) => `${i+1}. ${r.nome} (${r.idade})${r.acompanhantes ? ' + ' + r.acompanhantes : ''}`).join('\n');
+  const txt = `Confirmados, 15 anos da Letícia Maria (${$('tTotal').textContent} pessoas)\n` + sim.map((r, i) => `${i+1}. ${r.nome} (${r.idade})`).join('\n');
   try { await navigator.clipboard.writeText(txt); $('copiar').textContent = 'COPIADO ✓'; setTimeout(() => $('copiar').textContent = 'COPIAR LISTA', 1500); } catch (e) {}
+};
+// ===== Exportar planilha .xlsx (gerada aqui mesmo, sem bibliotecas externas) =====
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+const crc32 = b => { let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+function zip(files) {
+  const enc = new TextEncoder(), parts = [], cen = []; let off = 0;
+  for (const [name, txt] of files) {
+    const n = enc.encode(name), d = enc.encode(txt), crc = crc32(d);
+    const h = new DataView(new ArrayBuffer(30));
+    h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true);
+    h.setUint32(14, crc, true); h.setUint32(18, d.length, true); h.setUint32(22, d.length, true); h.setUint16(26, n.length, true);
+    const c = new DataView(new ArrayBuffer(46));
+    c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true);
+    c.setUint32(16, crc, true); c.setUint32(20, d.length, true); c.setUint32(24, d.length, true); c.setUint16(28, n.length, true); c.setUint32(42, off, true);
+    parts.push(h, n, d); cen.push(c, n); off += 30 + n.length + d.length;
+  }
+  const size = cen.reduce((a, x) => a + x.byteLength, 0), e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, size, true); e.setUint32(16, off, true);
+  return new Blob([...parts, ...cen, e], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+}
+function xlsx(cab, linhas) {
+  const x = v => String(v ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const col = i => String.fromCharCode(65 + i);
+  const cel = (v, r, i, s) => typeof v === 'number' && isFinite(v)
+    ? `<c r="${col(i)}${r}"${s ? ` s="${s}"` : ''}><v>${v}</v></c>`
+    : `<c r="${col(i)}${r}" t="inlineStr"${s ? ` s="${s}"` : ''}><is><t xml:space="preserve">${x(v)}</t></is></c>`;
+  const dados = [cab, ...linhas].map((l, k) => `<row r="${k+1}">${l.map((v, i) => cel(v, k + 1, i, k ? 0 : 1)).join('')}</row>`).join('');
+  const larg = [20, 36, 10, 16].map((w, i) => `<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join('');
+  const ult = `${col(cab.length - 1)}${linhas.length + 1}`;
+  return zip([
+    ['[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
+    ['_rels/.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+    ['xl/workbook.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Confirmações" sheetId="1" r:id="rId1"/></sheets></workbook>'],
+    ['xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
+    ['xl/styles.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF1D43A6"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="2"><xf xfId="0"/><xf xfId="0" fontId="1" fillId="2" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>'],
+    ['xl/worksheets/sheet1.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${larg}</cols><sheetData>${dados}</sheetData><autoFilter ref="A1:${ult}"/></worksheet>`]
+  ]);
+}
+$('exportar').onclick = () => {
+  const dt = iso => { const d = new Date(iso); return isNaN(d) ? String(iso ?? '') : d.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }).replace(',', ''); };
+  const linhas = rows.slice().reverse().map(r => [dt(r.data), r.nome, r.idade === '' || r.idade == null ? '' : +r.idade, r.vai]);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(xlsx(['Data/hora', 'Nome', 'Idade', 'Vai à festa?'], linhas));
+  a.download = `confirmacoes-leticia15-${new Date().toLocaleDateString('pt-BR').split('/').reverse().join('-')}.xlsx`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 };
 setInterval(() => { if (!$('dash').classList.contains('hidden')) carregar().catch(() => {}); }, 60000);
 if (key) entrar(true);
