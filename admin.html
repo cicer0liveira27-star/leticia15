@@ -55,6 +55,22 @@ input::placeholder{color:rgba(230,236,248,.4)}
 .del{flex:0 0 auto;font-family:Poiret,sans-serif;font-size:12px;letter-spacing:1.4px;padding:6px 12px;border-radius:14px;cursor:pointer;
  border:1px solid rgba(255,214,214,.7);background:rgba(255,120,140,.08);color:#ffd6d6}
 .del:hover{background:rgba(255,120,140,.2)}
+.acoes{display:flex;gap:8px;flex:0 0 auto}
+.edt{font-family:Poiret,sans-serif;font-size:12px;letter-spacing:1.4px;padding:6px 12px;border-radius:14px;cursor:pointer;
+ border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.08);color:#fff}
+.edt:hover{background:rgba(255,255,255,.18)}
+.editar{display:grid;gap:8px;margin-top:6px}
+.editar input{width:100%;font-family:Outfit,sans-serif;font-size:16px;color:#fff;padding:9px 14px;border-radius:18px;border:1.2px solid rgba(217,223,233,.75);background:rgba(10,29,99,.55);outline:none}
+.editar input:focus{border-color:#fff}
+.editar .lin{display:grid;grid-template-columns:90px 1fr 1fr;gap:8px}
+.editar .op{margin:0;cursor:pointer}
+.editar .op input{display:none}
+.editar .op span{display:block;text-align:center;padding:9px 4px;border-radius:18px;border:1.2px solid rgba(217,223,233,.75);font-family:Poiret,sans-serif;font-size:12px;letter-spacing:1.2px;color:#e6ebf5}
+.editar .op input:checked+span{background:linear-gradient(180deg,#ffffff,#d5dce8);color:#0b1a48;border-color:#fff;font-weight:600}
+.editar .bts{display:flex;gap:8px;justify-content:flex-end}
+.editar .bts button{font-family:Poiret,sans-serif;font-size:12px;letter-spacing:1.4px;padding:8px 14px;border-radius:14px;cursor:pointer}
+.editar .salvar{border:1px solid #fff;background:linear-gradient(180deg,#ffffff,#d5dce8);color:#0b1a48;font-weight:600}
+.editar .cancelar{border:1px solid rgba(217,223,233,.7);background:none;color:#e6ebf5}
 .del:disabled{opacity:.5;cursor:default}
 .dup{display:inline-block;margin-left:8px;font-family:Poiret,sans-serif;font-size:11px;letter-spacing:1.2px;padding:2px 8px;border-radius:10px;
  border:1px solid #ffd98a;color:#ffd98a;vertical-align:middle}
@@ -127,7 +143,7 @@ function render() {
   const vis = rows.map((r, i) => [r, i]).filter(([r]) => (filtro === 'todos' || r.vai === filtro) && (!q || String(r.nome).toLowerCase().includes(q)));
   $('lista').innerHTML = vis.length ? vis.map(([r, i]) => { const rep = cont[norm(r.nome)] > 1; return `
     <div class="item${rep ? ' repetido' : ''}"><div class="top"><span class="n">${esc(r.nome)}${rep ? '<span class="dup">REPETIDO</span>' : ''}</span><span class="tag ${r.vai === 'Sim' ? 'sim' : 'nao'}">${r.vai === 'Sim' ? 'VAI' : 'NÃO VAI'}</span></div>
-    <div class="meta"><span>${esc(r.idade)} anos<br><small>${fmt(r.data)}</small></span><button class="del" type="button" data-i="${i}">✕ EXCLUIR</button></div></div>`; }).join('')
+    <div class="meta"><span>${esc(r.idade)} anos<br><small>${fmt(r.data)}</small></span><span class="acoes"><button class="edt" type="button" data-i="${i}">✎ EDITAR</button><button class="del" type="button" data-i="${i}">✕ EXCLUIR</button></span></div></div>`; }).join('')
     : '<div class="empty">Nenhuma confirmação ainda.</div>';
 }
 async function entrar(silencioso) {
@@ -153,6 +169,39 @@ $('lista').addEventListener('click', async e => {
       : 'O script da planilha ainda não tem a função de excluir. Atualize o Code.gs no Apps Script e publique uma nova versão (veja o LEIA-ME).');
   } catch (err) { alert('Não foi possível excluir agora. Verifique a internet e tente de novo.'); }
   b.disabled = false; b.textContent = '✕ EXCLUIR';
+});
+// editar uma resposta (nome, idade, vai/não vai)
+$('lista').addEventListener('click', async e => {
+  const ed = e.target.closest('.edt');
+  if (ed) {
+    const i = +ed.dataset.i, r = rows[i], item = ed.closest('.item');
+    item.innerHTML = `<form class="editar" data-i="${i}">
+      <input name="nome" type="text" value="${esc(r.nome)}" placeholder="Nome completo" autocomplete="off">
+      <div class="lin"><input name="idade" type="number" inputmode="numeric" min="0" max="120" value="${esc(r.idade)}" placeholder="Idade">
+       <label class="op"><input type="radio" name="vai" value="Sim"${r.vai === 'Sim' ? ' checked' : ''}><span>VAI</span></label>
+       <label class="op"><input type="radio" name="vai" value="Não"${r.vai !== 'Sim' ? ' checked' : ''}><span>NÃO VAI</span></label></div>
+      <div class="bts"><button class="cancelar" type="button">CANCELAR</button><button class="salvar" type="submit">✓ SALVAR</button></div></form>`;
+    item.querySelector('input[name=nome]').focus();
+    return;
+  }
+  if (e.target.closest('.cancelar')) render();
+});
+$('lista').addEventListener('submit', async e => {
+  const f = e.target.closest('.editar'); if (!f) return;
+  e.preventDefault();
+  const r = rows[+f.dataset.i]; if (!r) return;
+  const novoNome = padronizaNome(f.nome.value), novaIdade = f.idade.value.trim(), novoVai = f.querySelector('input[name=vai]:checked').value;
+  if (!novoNome) { alert('Digite o nome.'); return; }
+  if (!novaIdade) { alert('Digite a idade.'); return; }
+  const b = f.querySelector('.salvar'); b.disabled = true; b.textContent = 'SALVANDO...';
+  try {
+    const qs = new URLSearchParams({ key, acao: 'editar', data: r.data, nome: r.nomeOriginal ?? r.nome, novoNome, novaIdade, novoVai, t: Date.now() });
+    const j = await (await fetch(`${URL_API}?${qs}`)).json();
+    if (j.editado) { await carregar(); return; }
+    alert(j.erro === 'nao_encontrado' ? 'Essa resposta não foi encontrada na planilha. Toque em ↻ para atualizar.'
+      : 'O script da planilha ainda não tem a função de editar. Atualize o Code.gs no Apps Script e publique uma nova versão.');
+  } catch (err) { alert('Não foi possível salvar agora. Verifique a internet e tente de novo.'); }
+  b.disabled = false; b.textContent = '✓ SALVAR';
 });
 $('atualizar').onclick = () => carregar().catch(() => {});
 $('sair').onclick = () => { try { sessionStorage.removeItem('adm_key'); } catch (e) {} location.reload(); };
